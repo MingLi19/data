@@ -1,5 +1,4 @@
-from typing import Union
-
+from app.router import meta
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
 
@@ -17,6 +16,4 @@ async def custom_swagger_ui_html():
     )
 
 
-@app.get("/ping")
-def ping():
-    return "Pong"
+app.include_router(meta.api, prefix="/meta", tags=["元数据"])
