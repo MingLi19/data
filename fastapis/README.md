@@ -1,3 +1,7 @@
+## Why Python
+- ML (Scikit-learn)
+- Life is short, you need Python
+- Python is the most popular language in the world
 
 ## 如何运行fastapi
 1. 进入python虚拟环境 `poetry shell`
