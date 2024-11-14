@@ -1,6 +1,6 @@
-from app.core.db import get_db_session
-from app.models.meta import FuelType
-from fastapi import Depends, HTTPException
+from core.db import get_db_session
+from fastapi import Depends
+from models.meta import FuelType
 from sqlmodel import Session, select
 
 

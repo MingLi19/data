@@ -1,9 +1,9 @@
 import logging
 
-from app.models.meta import FuelType
-from app.models.response import ResponseModel
-from app.services.meta import MetaService, get_meta_service
 from fastapi import APIRouter, Depends
+from models.meta import FuelType
+from models.response import ResponseModel
+from services.meta import MetaService, get_meta_service
 
 logger = logging.getLogger(__name__)
 

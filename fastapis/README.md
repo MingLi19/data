@@ -24,7 +24,7 @@ SQL
 
 补充基础知识按照`3-5-10`原则
 
-## 如何运行fastapi
+## 如何运行fastapi (在fastapis文件夹下)
 1. 安装依赖 `poetry install`
 2. 进入python虚拟环境 `poetry shell`
 3. 在src文件夹下 `fastapi dev`
