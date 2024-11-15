@@ -17,7 +17,7 @@ class FuelType(SQLModel, table=True):
                     "name_cn": "液化天然气",
                     "name_en": "Liquefied Natural Gas",
                     "name_abbr": "LNG",
-                    "cf": 2.75
+                    "cf": 2.75,
                 }
             ]
         }
