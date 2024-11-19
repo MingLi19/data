@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
-from router import meta
+from routers import meta
 
 app = FastAPI(docs_url=None, redoc_url=None)
 

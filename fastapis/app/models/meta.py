@@ -1,6 +1,7 @@
 from sqlmodel import Field, SQLModel
 
 
+## Data Modal -> Meta Data -> Fuel Type
 class FuelType(SQLModel, table=True):
     __tablename__ = "fuel_type"
     id: int = Field(primary_key=True)

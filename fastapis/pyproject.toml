@@ -10,6 +10,7 @@ python = "^3.11"
 fastapi = {extras = ["standard"], version = "^0.115.4"}
 sqlmodel = "^0.0.22"
 pymysql = "^1.1.1"
+cryptography = "^43.0.3"
 
 [build-system]
 requires = ["poetry-core"]
