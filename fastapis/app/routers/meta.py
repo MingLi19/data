@@ -21,3 +21,6 @@ async def get_fuel_types(
     """
     types = service.get_all_fuel_types()
     return {"code": 200, "data": types, "message": "获取燃料类型成功"}
+
+
+# Todo:在这里写一个新的船舶类型接口
