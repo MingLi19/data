@@ -1,7 +1,8 @@
 from sqlmodel import Field, SQLModel
+from pydantic import BaseModel
 
 
-## Data Modal -> Meta Data -> Fuel Type
+# Data Modal -> Meta Data -> Fuel Type
 class FuelType(SQLModel, table=True):
     __tablename__ = "fuel_type"
     id: int = Field(primary_key=True)
@@ -23,3 +24,10 @@ class FuelType(SQLModel, table=True):
             ]
         }
     }
+
+
+class FuelTypeInsert(BaseModel):
+    name_cn: str
+    name_en: str
+    name_abbr: str
+    cf: float
