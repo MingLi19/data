@@ -23,3 +23,24 @@ class FuelType(SQLModel, table=True):
             ]
         }
     }
+
+class ShipType(SQLModel, table=True):
+    __tablename__ = "ship_type"
+    id: int = Field(primary_key=True)
+    name_cn: str
+    name_en: str
+    code:str
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "id": 1,
+                    "name_cn": "散货船",
+                    "name_en": "Bulk carrier",
+                    "code": "I001",
+                }
+            ]
+        }
+    }
+
