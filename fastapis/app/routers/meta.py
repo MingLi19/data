@@ -12,7 +12,7 @@ api = APIRouter()
 
 
 @api.get(
-    "/fuel_type", summary="获取燃料类型", response_model=ResponseModel[list[FuelType]],
+    "/fuel_type", summary="获取燃料类型", response_model=ResponseModel[list[FuelType]]
 )
 
 async def get_fuel_types(
@@ -22,7 +22,7 @@ async def get_fuel_types(
     “新增船舶”弹窗，选择设备燃料类型
     """
     types = service.get_all_fuel_types()
-    return {"code": 200, "data": types, "message": "获取燃料类型成功"};
+    return {"code": 200, "data": types, "message": "获取燃料类型成功"}
 
 @api.get(
     "/ship_type", summary="获取船舶类型", response_model=ResponseModel[list[ShipType]]
@@ -34,5 +34,5 @@ async def get_ship_types(
     选择船舶类型
     """
     types = service.get_all_fuel_types()
-    return {"code": 200, "data": types, "message": "获取船舶类型成功"};
+    return {"code": 200, "data": types, "message": "获取船舶类型成功"}
 
