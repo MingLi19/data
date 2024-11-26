@@ -12,7 +12,7 @@ create table fuel_type
 
 -- 建表: 船舶类型数据
 -- Date: 2024-11-19
-create table db.ship_type
+create table ship_type
 (
     id      int auto_increment
         primary key,
@@ -20,4 +20,16 @@ create table db.ship_type
     name_en varchar(255) not null,
     code    varchar(255) not null
 );
+
+-- 建表: 船舶类型数据
+-- Date: 2024-11-26
+create table time_zone
+(
+    id           int auto_increment
+        primary key,
+    name_cn      varchar(255) not null,
+    name_en      varchar(255) not null,
+    explaination varchar(255) not null
+);
+
 

@@ -26,3 +26,31 @@ INSERT INTO ship_type (id, name_cn, name_en, code) VALUES (10, '滚装货船', '
 INSERT INTO ship_type (id, name_cn, name_en, code) VALUES (11, '客滚船', 'Ro-ro passenger ship', 'I011');
 INSERT INTO ship_type (id, name_cn, name_en, code) VALUES (12, '客滚船(高速)', 'Ro-ro passenger ship (high-speed craft)', 'I011.1');
 INSERT INTO ship_type (id, name_cn, name_en, code) VALUES (13, '豪华邮轮', 'Cruise passenger ship', 'I012');
+
+-- 插入时区数据
+-- Date: 2024-11-26
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (1, '零时区', 'UTC+0', '零时区 7.5° W～7.5° E 0°');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (2, '东一区', 'UTC+1', '东一区 7.5° E～22.5° E 15° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (3, '东二区', 'UTC+2', '东二区 22.5° E～37.5° E 30° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (4, '东三区', 'UTC+3', '东三区 37.5° E～52.5° E 45° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (5, '东四区', 'UTC+4', '东四区 52.5° E～67.5° E 60° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (6, '东五区', 'UTC+5', '东五区 67.5° E～82.5° E 75° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (7, '东六区', 'UTC+6', '东六区 82.5° E～97.5° E 90° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (8, '东七区', 'UTC+7', '东七区 97.5° E～112.5° E 105° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (9, '东八区', 'UTC+8', '东八区 112.5° E～127.5° E 120° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (10, '东九区', 'UTC+9', '东九区 127.5° E～142.5° E 135° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (11, '东十区', 'UTC+10', '东十区 142.5° E～157.5° E 150° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (12, '东十一区', 'UTC+11', '东十一区 157.5° E～172.5° E 165° E');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (13, '东十二区', 'UTC+12', '东十二区 172.5° E～180° E 180°');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (14, '西一区', 'UTC-1', '西一区 7.5° W～22.5° W 15° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (15, '西二区', 'UTC-2', '西二区 22.5° W～37.5° W 30° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (16, '西三区', 'UTC-3', '西三区 37.5° W～52.5° W 45° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (17, '西四区', 'UTC-4', '西四区 52.5° W～67.5° W 60° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (18, '西五区', 'UTC-5', '西五区 67.5° W～82.5° W 75° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (19, '西六区', 'UTC-6', '西六区 82.5° W～97.5° W 90° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (20, '西七区', 'UTC-7', '西七区 97.5° W～112.5° W 105° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (21, '西八区', 'UTC-8', '西八区 112.5° W～127.5° W 120° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (22, '西九区', 'UTC-9', '西九区 127.5° W～142.5° W 135° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (23, '西十区', 'UTC-10', '西十区 142.5° W～157.5° W 150° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (24, '西十一区', 'UTC-11', '西十一区 157.5° W～172.5° W 165° W');
+INSERT INTO time_zone (id, name_cn, name_en, explaination) VALUES (25, '西十二区', 'UTC-12', '西十二区 172.5° W～180° W 180°');
