@@ -1,9 +1,8 @@
 from core.db import get_db_session
 from fastapi import Depends
-from models.meta import FuelType
-#
-from models.meta import ShipType
 
+#
+from models.meta import FuelType, ShipType
 from sqlmodel import Session, select
 
 
@@ -19,7 +18,7 @@ class MetaService:
         statement = select(FuelType)
         fuel_types = self.session.exec(statement).all()
         return fuel_types
-    
+
     #
     def get_all_ship_types(self) -> list[ShipType]:
         statement = select(ShipType)

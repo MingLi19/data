@@ -1,9 +1,9 @@
 import logging
-#
-from models.meta import ShipType
 
 from fastapi import APIRouter, Depends
-from models.meta import FuelType
+
+#
+from models.meta import FuelType, ShipType
 from models.response import ResponseModel
 from services.meta import MetaService, get_meta_service
 
@@ -23,6 +23,7 @@ async def get_fuel_types(
     """
     types = service.get_all_fuel_types()
     return {"code": 200, "data": types, "message": "获取燃料类型成功"}
+
 
 ###
 @api.get(
