@@ -32,4 +32,4 @@ async def get_ship_types(
     选择船舶类型
     """
     types = service.get_all_fuel_types()
-    return {"code": 200, "data": types, "message": "获取船舶类型成功"};
+    return {"code": 200, "data": types, "message": "获取船舶类型成功"}
