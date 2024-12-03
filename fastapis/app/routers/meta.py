@@ -1,7 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends
-from models.meta import FuelType, ShipType
+from models.meta import FuelType, ShipType, TimeZone
 from models.response import ResponseModel
 from services.meta import MetaService, get_meta_service
 
@@ -33,3 +33,15 @@ async def get_ship_types(
     """
     types = service.get_all_fuel_types()
     return {"code": 200, "data": types, "message": "获取船舶类型成功"}
+
+@api.get(
+    "/time_zone", summary="获取时区", response_model=ResponseModel[list[TimeZone]]
+)
+async def get_time_zones(
+        service: MetaService = Depends(get_meta_service)
+) -> ResponseModel[list[TimeZone]]:
+    """
+    获取时区
+    """
+    types = service.get_all_time_zones()
+    return {"code": 200, "data": types, "message": "获取时区成功"}
