@@ -36,12 +36,11 @@ create table time_zone
 -- Date: 2024-11-26
 create table company
 (
+    id             int auto_increment primary key,
     name           varchar(255) not null,
     contact_person varchar(255) null,
     contact_phone  varchar(255) null,
     contact_email  varchar(255) null,
-    id             int auto_increment
-        primary key,
     created_at     datetime     not null,
     address        varchar(255) null,
     constraint name

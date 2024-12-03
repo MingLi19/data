@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
-from routers import company, meta, user, vessel
+from routers import company, meta
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
@@ -17,10 +17,4 @@ async def custom_swagger_ui_html():
 
 
 app.include_router(meta.api, prefix="/meta", tags=["元数据"])
-app.include_router(
-    vessel.api, prefix="/vessel", tags=["船舶"]
-)  # TODO: 1. 导入vessel模块
-app.include_router(
-    company.api, prefix="/company", tags=["公司"]
-)  # TODO: 2. 导入company模块
-app.include_router(user.api, prefix="/user", tags=["用户"])  # TODO: 3. 导入user模块
+app.include_router(company.api, prefix="/company", tags=["公司"])
