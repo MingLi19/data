@@ -29,7 +29,7 @@ class ShipType(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name_cn: str
     name_en: str
-    code:str
+    code: str
 
     model_config = {
         "json_schema_extra": {
