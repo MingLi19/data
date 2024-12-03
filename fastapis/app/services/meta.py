@@ -22,21 +22,6 @@ class MetaService:
         ship_types = self.session.exec(statement).all()
         return ship_types
 
-    def get_all_ship_types(self) -> list[ShipType]:
-        statement = select(ShipType)
-        ship_types = self.session.exec(statement).all()
-        return ship_types
-
-    def get_all_time_zones(self) -> list[TimeZone]:
-        statement = select(TimeZone)
-        time_zones = self.session.exec(statement).all()
-        return time_zones
-
-    def get_all_ship_types(self) -> list[ShipType]:
-        statement = select(ShipType)
-        ship_types = self.session.exec(statement).all()
-        return ship_types
-
     def get_all_time_zones(self) -> list[TimeZone]:
         statement = select(TimeZone)
         time_zones = self.session.exec(statement).all()
