@@ -1,3 +1,5 @@
+-- 建表: 公司数据
+-- Date: 2024-11-26
 create table company
 (
     id             int auto_increment,
