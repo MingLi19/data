@@ -22,6 +22,7 @@ async def get_fuel_types(
     types = service.get_all_fuel_types()
     return {"code": 200, "data": types, "message": "获取燃料类型成功"}
 
+
 @api.get(
     "/ship_type", summary="获取船舶类型", response_model=ResponseModel[list[ShipType]]
 )
@@ -34,11 +35,10 @@ async def get_ship_types(
     types = service.get_all_fuel_types()
     return {"code": 200, "data": types, "message": "获取船舶类型成功"}
 
-@api.get(
-    "/time_zone", summary="获取时区", response_model=ResponseModel[list[TimeZone]]
-)
+
+@api.get("/time_zone", summary="获取时区", response_model=ResponseModel[list[TimeZone]])
 async def get_time_zones(
-        service: MetaService = Depends(get_meta_service)
+    service: MetaService = Depends(get_meta_service),
 ) -> ResponseModel[list[TimeZone]]:
     """
     获取时区

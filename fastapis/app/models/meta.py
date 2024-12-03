@@ -24,6 +24,8 @@ class FuelType(SQLModel, table=True):
         }
     }
 
+
+## Data Modal -> Meta Data -> Ship Type
 class ShipType(SQLModel, table=True):
     __tablename__ = "ship_type"
     id: int = Field(primary_key=True)
@@ -44,6 +46,7 @@ class ShipType(SQLModel, table=True):
         }
     }
 
+
 class TimeZone(SQLModel, table=True):
     __tablename__ = "time_zone"
     id: int = Field(primary_key=True)
@@ -58,9 +61,8 @@ class TimeZone(SQLModel, table=True):
                     "id": 1,
                     "name_cn": "中国标准时间",
                     "name_en": "China Standard Time",
-                    "explaination": "UTC+8"
+                    "explaination": "UTC+8",
                 }
             ]
         }
     }
-
