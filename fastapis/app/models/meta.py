@@ -66,3 +66,33 @@ class TimeZone(SQLModel, table=True):
             ]
         }
     }
+
+class User(SQLModel, table=True):
+    __tablename__ = "user"
+    id: int = Field(primary_key=True)
+    username:str
+    hashed_password:str
+    phone:str
+    is_admin:bool
+    is_system_admin:bool
+    disabled:bool
+    created_at:int
+    company_id:int
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "id": 1,
+                    "username": "Jayzhu",
+                    "hashed_password": "123456789",
+                    "phone": "12345678999",
+                    "is_admin": True,
+                    "is_system_admin": False,
+                    "disabled": False,
+                    "created_at": "2024-12-01",
+                    "company_id": 101,
+                }
+            ]
+        }
+    }
