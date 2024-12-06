@@ -1,7 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends
-from models.meta import FuelType, ShipType, TimeZone
+from models.meta import FuelType, ShipType, TimeZone, User
 from models.response import ResponseModel
 from services.meta import MetaService, get_meta_service
 
@@ -45,3 +45,14 @@ async def get_time_zones(
     """
     types = service.get_all_time_zones()
     return {"code": 200, "data": types, "message": "获取时区成功"}
+
+
+@api.get("/user", summary="获取用户信息", response_model=ResponseModel[list[User]])
+async def get_time_zones(
+    service: MetaService = Depends(get_meta_service),
+) -> ResponseModel[list[User]]:
+    """
+    获取用户信息
+    """
+    types = service.get_all_time_zones()
+    return {"code": 200, "data": types, "message": "获取用户信息成功"}
