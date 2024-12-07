@@ -1,4 +1,6 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
+
+from models.equipment_fuel import EquipmentFuel
 
 
 ## Data Modal -> Meta Data -> Fuel Type
@@ -9,6 +11,7 @@ class FuelType(SQLModel, table=True):
     name_en: str
     name_abbr: str
     cf: float
+    equipment_fuels: list[EquipmentFuel] = Relationship(back_populates="fuel_type")
 
     model_config = {
         "json_schema_extra": {
