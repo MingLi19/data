@@ -1,7 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends
-from models.meta import FuelType, ShipType, TimeZone, Equipment
+from models.meta import Equipment, FuelType, ShipType, TimeZone
 from models.response import ResponseModel
 from services.meta import MetaService, get_meta_service
 
@@ -54,5 +54,5 @@ async def get_equipment(
     """
     获取设备列表
     """
-    equipment_list = service.get_all_equipment()  # 假设您已经在 MetaService 中实现了该方法
+    equipment_list = service.get_all_equipment()  
     return {"code": 200, "data": equipment_list, "message": "获取设备列表成功"}
