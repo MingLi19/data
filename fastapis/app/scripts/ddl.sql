@@ -3,11 +3,11 @@
 create table fuel_type
 (
     id        int auto_increment
-        primary key,
     name_cn   varchar(255) not null,
     name_en   varchar(255) not null,
     name_abbr varchar(255) not null,
-    cf        float        not null
+    cf        float        not null,
+    PRIMARY KEY (id)
 );
 
 -- 建表: 船舶类型数据
@@ -15,10 +15,10 @@ create table fuel_type
 create table ship_type
 (
     id      int auto_increment
-        primary key,
     name_cn varchar(255) not null,
     name_en varchar(255) not null,
-    code    varchar(255) not null
+    code    varchar(255) not null,
+    PRIMARY KEY (id)
 );
 
 -- 建表: 船舶类型数据
@@ -26,10 +26,10 @@ create table ship_type
 create table time_zone
 (
     id           int auto_increment
-        primary key,
     name_cn      varchar(255) not null,
     name_en      varchar(255) not null,
-    explaination varchar(255) not null
+    explaination varchar(255) not null,
+    PRIMARY KEY (id)
 );
 
 -- 建表: 公司数据
@@ -51,6 +51,7 @@ create table company
 -- Date: 2024-11-26
 create table user
 (
+    id              int auto_increment
     username        varchar(255) not null,
     hashed_password varchar(255) not null,
     phone           varchar(255) not null,
@@ -58,15 +59,15 @@ create table user
     is_system_admin tinyint(1)   not null,
     disabled        tinyint(1)   not null,
     created_at      datetime     not null,
-    id              int auto_increment
-        primary key,
     company_id      int          not null,
+    PRIMARY KEY (id),
 );
 
 -- 建表: 船舶数据
 -- Date: 2024-11-26
 create table vessel
 (
+    id                    int auto_increment
     name                  varchar(255) not null,
     mmsi                  varchar(255) not null,
     build_date            date         not null,
@@ -78,15 +79,10 @@ create table vessel
     newly_paint_date      date         null,
     propeller_polish_date date         null,
     company_id            int          not null,
-    id                    int auto_increment
-        primary key,
     created_at            datetime     not null,
     ship_type             int          not null,
     time_zone             int          not null,
-    constraint mmsi
-        unique (mmsi),
-    constraint name
-        unique (name),
+    PRIMARY KEY (id),
 );
 
 -- 建表: 船舶设备数据
