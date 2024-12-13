@@ -1,5 +1,7 @@
-from sqlmodel import Field, SQLModel
 from datetime import datetime
+
+from sqlmodel import Field, SQLModel
+
 
 ## Data Modal -> Meta Data -> Fuel Type
 class FuelType(SQLModel, table=True):
@@ -69,12 +71,11 @@ class TimeZone(SQLModel, table=True):
 
 
 class Equipment(SQLModel, table=True):
-    __tablename__ = "equipment"
     id: int = Field(primary_key=True)
     name_cn: str
     name_en: str
     explaination: str
-    created_at: datetime = Field
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
     model_config = {
         "json_schema_extra": {

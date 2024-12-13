@@ -47,5 +47,5 @@ class EquipmentUpdate(SQLModel):
 
     name: str | None 
     type: str | None 
-    vessel_id: int | None 
+
 
