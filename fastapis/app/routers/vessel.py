@@ -2,6 +2,8 @@ import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
+
+# from models.equipment import Equipment
 from models.response import ResponseModel
 from models.vessel import Vessel, VesselCreate, VesselUpdate
 from services.vessel import VesselService, get_vessel_service
@@ -58,3 +60,15 @@ async def delete_vessel(
 ) -> ResponseModel[Vessel]:
     vessel = service.delete_vessel(vessel_id)
     return {"code": 200, "data": vessel, "message": "船舶删除成功"}
+
+
+@api.get("/{vessel_id}/equipments", summary="获取船舶设备")
+async def get_equipments_by_vessel_id(
+    vessel_id: Annotated[int, Path(description="船舶ID")],
+    service: VesselService = Depends(get_vessel_service),
+) -> ResponseModel[Vessel]:
+    """
+    用来显示船舶设备列表
+    """
+    equioments = service.get_equipments_by_vessel_id(vessel_id)
+    return {"code": 200, "data": equioments, "message": "获取船舶设备成功"}

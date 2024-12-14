@@ -1,7 +1,9 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+
+from models.equipment import Equipment
 
 
 class VesselBase(SQLModel):
@@ -45,6 +47,7 @@ class VesselBase(SQLModel):
 class Vessel(VesselBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    equipments: list["Equipment"] = Relationship(back_populates="vessel")
 
 
 class VesselCreate(VesselBase):
