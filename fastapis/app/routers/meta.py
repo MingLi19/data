@@ -45,3 +45,4 @@ async def get_time_zones(
     """
     types = service.get_all_time_zones()
     return {"code": 200, "data": types, "message": "获取时区成功"}
+

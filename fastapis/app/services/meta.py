@@ -26,3 +26,4 @@ class MetaService:
         statement = select(TimeZone)
         time_zones = self.session.exec(statement).all()
         return time_zones
+    
