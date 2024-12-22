@@ -1,5 +1,6 @@
 from core.db import get_db_session
 from fastapi import Depends, HTTPException
+from models.equipment import Equipment
 from models.vessel import Vessel, VesselCreate, VesselUpdate
 from sqlmodel import Session, select
 
@@ -45,3 +46,10 @@ class VesselService:
         self.session.delete(vessel)
         self.session.commit()
         return vessel
+
+    # 获取指定船舶的所有设备
+    def get_vessel_equipments(self, vessel_id: int) -> list[Equipment]:
+        vessel = self.get_vessel_by_id(vessel_id)
+        return self.session.exec(
+            select(Equipment).where(Equipment.vessel_id == vessel.id)
+        ).all()

@@ -1,6 +1,7 @@
 from core.db import get_db_session
 from fastapi import Depends, HTTPException
 from models.equipment import Equipment, EquipmentCreate, EquipmentUpdate
+from models.vessel import Vessel
 from sqlmodel import Session, select
 
 
@@ -24,13 +25,23 @@ class EquipmentService:
         return equipment
 
     def create_equipment(self, equipmentToCreate: EquipmentCreate) -> Equipment:
+        # 检查船舶是否存在
+        vessel = self.session.get(Vessel, equipmentToCreate.vessel_id)
+        if not vessel:
+            raise HTTPException(status_code=404, detail="关联的船舶不存在")
+
+        # 创建设备对象并关联船舶
         equipment = Equipment.model_validate(equipmentToCreate)
+        equipment.vessel_id = vessel.id  # 关联船舶
+
         self.session.add(equipment)
         self.session.commit()
         self.session.refresh(equipment)
         return equipment
 
-    def update_equipment(self, equipment_id: int, equipmentUpdate: EquipmentUpdate) -> Equipment:
+    def update_equipment(
+        self, equipment_id: int, equipmentUpdate: EquipmentUpdate
+    ) -> Equipment:
         equipmentUpdate = EquipmentUpdate.model_validate(equipmentUpdate).model_dump(
             exclude_unset=True
         )

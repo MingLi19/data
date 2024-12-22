@@ -1,60 +1,77 @@
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, HTTPException, Path
+from models.equipment import Equipment, EquipmentCreate, EquipmentUpdate
 from models.response import ResponseModel
-from models.vessel import Vessel, VesselCreate, VesselUpdate
-from services.vessel import VesselService, get_vessel_service
+from services.equipment import EquipmentService, get_equipment_service
 
 api = APIRouter()
 
 logger = logging.getLogger(__name__)
 
 
-@api.get("", summary="获取所有船舶")
-async def get_vessels(
-    service: VesselService = Depends(get_vessel_service),
-) -> ResponseModel[list[Vessel]]:
+@api.get("", summary="获取所有设备")
+async def get_equipments(
+    service: EquipmentService = Depends(get_equipment_service),
+) -> ResponseModel[list[Equipment]]:
     """
-    用来显示船舶列表
+    获取设备列表
     """
-    vessels = service.get_all_vessels()
-    return {"code": 200, "data": vessels, "message": "获取船舶列表成功"}
+    equipments = service.get_all_equipments()
+    return {"code": 200, "data": equipments, "message": "获取设备列表成功"}
 
 
-@api.post("", summary="创建船舶")
-async def create_vessel(
-    vessel: VesselCreate, service: VesselService = Depends(get_vessel_service)
-) -> ResponseModel[Vessel]:
-    vessel = service.create_vessel(vessel)
-    return {"code": 200, "data": vessel, "message": "船舶创建成功"}
-
-
-@api.get("/{vessel_id}", summary="获取单个船舶详情")
-async def get_vessel(
-    vessel_id: Annotated[int, Path(description="船舶ID")],
-    service: VesselService = Depends(get_vessel_service),
-) -> ResponseModel[Vessel]:
+@api.post("", summary="创建设备")
+async def create_equipment(
+    equipment: EquipmentCreate,
+    service: EquipmentService = Depends(get_equipment_service),
+) -> ResponseModel[Equipment]:
     """
-    首页，显示船舶信息
+    创建新的设备 - 关键操作
     """
-    vessel = service.get_vessel_by_id(vessel_id)
-    return {"code": 200, "data": vessel, "message": "获取船舶信息成功"}
+    logger.info(f"请求创建设备: {equipment.name}")
+    created_equipment = service.create_equipment(equipment)
+    logger.info(
+        f"成功创建设备: ID={created_equipment.id}, 名称={created_equipment.name}"
+    )
+    return {"code": 200, "data": created_equipment, "message": "设备创建成功"}
 
 
-@api.put("/{vessel_id}", summary="更新船舶信息")
-async def update_vessel(
-    vessel_id: int,
-    vessel: VesselUpdate,
-    service: VesselService = Depends(get_vessel_service),
-) -> ResponseModel[Vessel]:
-    vessel = service.update_vessel(vessel_id, vessel)
-    return {"code": 200, "data": vessel, "message": "船舶信息更新成功"}
+@api.get("/{equipment_id}", summary="获取单个设备详情")
+async def get_equipment(
+    equipment_id: Annotated[int, Path(description="设备ID")],
+    service: EquipmentService = Depends(get_equipment_service),
+) -> ResponseModel[Equipment]:
+    """
+    获取指定设备信息 - 不记录日志，普通查询
+    """
+    equipment = service.get_equipment_by_id(equipment_id)
+    if not equipment:
+        logger.error(f"设备 ID={equipment_id} 不存在")
+        raise HTTPException(status_code=404, detail="设备不存在")
+    return {"code": 200, "data": equipment, "message": "获取设备信息成功"}
 
 
-@api.delete("/{vessel_id}", summary="删除船舶")
-async def delete_vessel(
-    vessel_id: int, service: VesselService = Depends(get_vessel_service)
-) -> ResponseModel[Vessel]:
-    vessel = service.delete_vessel(vessel_id)
-    return {"code": 200, "data": vessel, "message": "船舶删除成功"}
+@api.put("/{equipment_id}", summary="更新设备信息")
+async def update_equipment(
+    equipment_id: int,
+    equipment: EquipmentUpdate,
+    service: EquipmentService = Depends(get_equipment_service),
+) -> ResponseModel[Equipment]:
+    """
+    更新设备信息
+    """
+    equipment = service.update_equipment(equipment_id, equipment)
+    return {"code": 200, "data": equipment, "message": "设备信息更新成功"}
+
+
+@api.delete("/{equipment_id}", summary="删除设备")
+async def delete_equipment(
+    equipment_id: int, service: EquipmentService = Depends(get_equipment_service)
+) -> ResponseModel[Equipment]:
+    """
+    删除设备
+    """
+    equipment = service.delete_equipment(equipment_id)
+    return {"code": 200, "data": equipment, "message": "设备删除成功"}
