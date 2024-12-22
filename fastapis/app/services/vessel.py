@@ -1,7 +1,8 @@
-from core.db import get_db_session
 from fastapi import Depends, HTTPException
-from models.vessel import Vessel, VesselCreate, VesselUpdate
 from sqlmodel import Session, select
+
+from app.core.db import get_db_session
+from app.models.vessel import Vessel, VesselCreate, VesselUpdate
 
 
 def get_vessel_service(session: Session = Depends(get_db_session)):

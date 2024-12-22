@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class CompanyBase(SQLModel):
@@ -11,24 +10,12 @@ class CompanyBase(SQLModel):
     contact_phone: str | None
     contact_email: str | None
 
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "name": "Company A",
-                    "address": "123 Main St, New York, NY",
-                    "contact_person": "John Doe",
-                    "contact_phone": "12345678",
-                    "contact_email": "test@163.com",
-                }
-            ]
-        }
-    }
-
 
 class Company(CompanyBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    users: list["User"] = Relationship(back_populates="company")  # noqa: F821
 
 
 class CompanyCreate(CompanyBase):
@@ -49,9 +36,19 @@ class CompanyCreate(CompanyBase):
     }
 
 
-class CompanyUpdate(BaseModel):
-    name: str | None
-    address: str | None
-    contact_person: str | None
-    contact_phone: str | None
-    contact_email: str | None
+class CompanyUpdate(CompanyBase):
+    pass
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "name": "Company A Updated",
+                    "address": "123 Main St, New York, NY",
+                    "contact_person": "John Doe",
+                    "contact_phone": "12345678",
+                    "contact_email": "test@163.com",
+                }
+            ]
+        }
+    }

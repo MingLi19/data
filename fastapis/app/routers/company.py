@@ -2,9 +2,10 @@ import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
-from models.company import Company, CompanyCreate, CompanyUpdate
-from models.response import ResponseModel
-from services.company import CompanyService, get_company_service
+
+from app.models.company import Company, CompanyCreate, CompanyUpdate
+from app.models.response import ResponseModel
+from app.services.company import CompanyService, get_company_service
 
 api = APIRouter()
 
@@ -48,6 +49,7 @@ async def update_company(
     company: CompanyUpdate,
     service: CompanyService = Depends(get_company_service),
 ) -> ResponseModel[Company]:
+    print("company: ", company)
     company = service.update_company(company_id, company)
     return {"code": 200, "data": company, "message": "公司信息更新成功"}
 

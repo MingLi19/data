@@ -2,9 +2,10 @@ import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
-from models.response import ResponseModel
-from models.user import User, UserCreate, UserUpdate
-from services.user import UserService, get_user_service
+
+from app.models.response import ResponseModel
+from app.models.user import User, UserCreate, UserUpdate, UserWithCompany
+from app.services.user import UserService, get_user_service
 
 api = APIRouter()
 
@@ -34,11 +35,11 @@ async def create_user(
 async def get_user(
     user_id: Annotated[int, Path(description="用户ID")],
     service: UserService = Depends(get_user_service),
-) -> ResponseModel[User]:
+) -> ResponseModel[UserWithCompany]:
     """
     首页，显示用户信息
     """
-    user = service.get_user_by_id(user_id)
+    user = service.get_user_with_company(user_id)
     return {"code": 200, "data": user, "message": "获取用户信息成功"}
 
 
