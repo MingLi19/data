@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
@@ -77,6 +78,8 @@ class Equipment(SQLModel, table=True):
     explaination: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+    vessel_id: Optional[int] = Field(default=None, foreign_key="vessel.id")
+
     model_config = {
         "json_schema_extra": {
             "examples": [
@@ -90,4 +93,3 @@ class Equipment(SQLModel, table=True):
             ]
         }
     }
-
