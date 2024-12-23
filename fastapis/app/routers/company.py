@@ -49,7 +49,6 @@ async def update_company(
     company: CompanyUpdate,
     service: CompanyService = Depends(get_company_service),
 ) -> ResponseModel[Company]:
-    print("company: ", company)
     company = service.update_company(company_id, company)
     return {"code": 200, "data": company, "message": "公司信息更新成功"}
 

@@ -39,9 +39,7 @@ class UserService:
         return user
 
     def update_user(self, user_id: int, userUpdate: UserUpdate) -> User:
-        print("userUpdate: ", userUpdate)
         userUpdate = User.model_validate(userUpdate).model_dump(exclude_unset=True)
-        print("userUpdate: ", userUpdate)
         db_user = self.get_user_by_id(user_id)
         db_user.sqlmodel_update(userUpdate)
         self.session.commit()

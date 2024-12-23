@@ -1,7 +1,10 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+
+from app.models.company import Company
+from app.models.meta import ShipType, TimeZone
 
 
 class VesselBase(SQLModel):
@@ -15,36 +18,20 @@ class VesselBase(SQLModel):
     engine_overhaul_date: str | None  # 发动机检修日期
     newly_paint_date: str | None  # 新涂装日期
     propeller_polish_date: str | None  # 螺旋桨抛光日期
-    company_id: int  # 公司ID
-    ship_type: int  # 船舶类型
-    time_zone: int  # 时区
-
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "name": "船名",
-                    "mmsi": "海事识别号",
-                    "build_date": "2024-12-06",
-                    "gross_tone": 1.0,
-                    "dead_weight": 2.0,
-                    "new_vessel": True,
-                    "hull_clean_date": None,
-                    "engine_overhaul_date": None,
-                    "newly_paint_date": None,
-                    "propeller_polish_date": None,
-                    "company_id": 1,
-                    "ship_type": 3,
-                    "time_zone": 4,
-                }
-            ]
-        }
-    }
 
 
 class Vessel(VesselBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    company_id: int | None = Field(default=None, foreign_key="company.id")
+    company: Company | None = Relationship(back_populates="vessels")
+
+    ship_type_id: int | None = Field(default=None, foreign_key="ship_type.id")
+    ship_type: ShipType | None = Relationship(back_populates="vessel")
+
+    time_zone_id: int | None = Field(default=None, foreign_key="time_zone.id")
+    time_zone: TimeZone | None = Relationship(back_populates="vessel")
 
 
 class VesselCreate(VesselBase):

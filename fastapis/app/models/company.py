@@ -16,6 +16,7 @@ class Company(CompanyBase, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     users: list["User"] = Relationship(back_populates="company")  # noqa: F821
+    vessels: list["Vessel"] = Relationship(back_populates="company")  # noqa: F821
 
 
 class CompanyCreate(CompanyBase):

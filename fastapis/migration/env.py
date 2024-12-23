@@ -4,6 +4,7 @@ from alembic import context
 from app.models.company import Company  # noqa: F401
 from app.models.meta import FuelType, ShipType, TimeZone  # noqa: F401
 from app.models.user import User  # noqa: F401
+from app.models.vessel import Vessel  # noqa: F401
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
