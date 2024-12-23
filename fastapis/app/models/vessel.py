@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
+
 from pydantic import BaseModel
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from  app.models..equipment import Equipment
+    from app.models.equipment import Equipment
 
 from app.models.company import Company
 from app.models.meta import ShipType, TimeZone

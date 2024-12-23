@@ -1,6 +1,11 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.vessel import Vessel
 
 
 class CompanyBase(SQLModel):
@@ -15,8 +20,8 @@ class Company(CompanyBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    users: list["User"] = Relationship(back_populates="company")  # noqa: F821
-    vessels: list["Vessel"] = Relationship(back_populates="company")  # noqa: F821
+    users: list["User"] = Relationship(back_populates="company")
+    vessels: list["Vessel"] = Relationship(back_populates="company")
 
 
 class CompanyCreate(CompanyBase):

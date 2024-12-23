@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
-from .vessel import Relationship, Vessel
+from app.models.vessel import Vessel
 
 
 class EquipmentBase(SQLModel):
