@@ -1,7 +1,11 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from app.models.equipment import Equipment
 
 from app.models.company import Company
 from app.models.meta import ShipType, TimeZone
@@ -23,6 +27,8 @@ class VesselBase(SQLModel):
 class Vessel(VesselBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    equipments: list["Equipment"] = Relationship(back_populates="vessel")
 
     company_id: int | None = Field(default=None, foreign_key="company.id")
     company: Company | None = Relationship(back_populates="vessels")

@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
+from app.models.equipment import Equipment
 from app.models.vessel import Vessel, VesselCreate, VesselUpdate
 
 
@@ -46,3 +47,9 @@ class VesselService:
         self.session.delete(vessel)
         self.session.commit()
         return vessel
+
+    async def create_vessel_equipments(self, vessel, equipment) -> Equipment:
+        self.session.add(equipment)
+        self.session.add(vessel)
+        self.session.commit()
+        return equipment

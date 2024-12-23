@@ -3,6 +3,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 
+from app.models.equipment import Equipment
 from app.models.response import ResponseModel
 from app.models.vessel import Vessel, VesselCreate, VesselUpdate
 from app.services.vessel import VesselService, get_vessel_service
@@ -59,3 +60,18 @@ async def delete_vessel(
 ) -> ResponseModel[Vessel]:
     vessel = service.delete_vessel(vessel_id)
     return {"code": 200, "data": vessel, "message": "船舶删除成功"}
+
+
+@api.post("/{vessel_id}/equipments", summary="创建船舶设备")
+async def create_vessel_equipments(
+    vessel: VesselCreate,
+    equipment: Equipment,
+    service: VesselService = Depends(get_vessel_service),
+) -> ResponseModel[Equipment]:
+    vessel = service.create_vessel(vessel)
+
+    equipment.vessel = vessel
+
+    equipment = await service.create_vessel_equipments(vessel, equipment)
+    print(equipment)
+    return {"code": 200, "data": equipment, "message": "船舶设备创建成功"}
