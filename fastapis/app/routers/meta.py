@@ -1,9 +1,10 @@
 import logging
 
 from fastapi import APIRouter, Depends
-from models.meta import FuelType, ShipType, TimeZone
-from models.response import ResponseModel
-from services.meta import MetaService, get_meta_service
+
+from app.models.meta import FuelType, ShipType, TimeZone
+from app.models.response import ResponseModel
+from app.services.meta import MetaService, get_meta_service
 
 logger = logging.getLogger(__name__)
 
@@ -45,4 +46,3 @@ async def get_time_zones(
     """
     types = service.get_all_time_zones()
     return {"code": 200, "data": types, "message": "获取时区成功"}
-

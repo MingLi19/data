@@ -1,7 +1,8 @@
-from core.db import get_db_session
 from fastapi import Depends, HTTPException
-from models.company import Company, CompanyCreate, CompanyUpdate
 from sqlmodel import Session, select
+
+from app.core.db import get_db_session
+from app.models.company import Company, CompanyCreate, CompanyUpdate
 
 
 def get_company_service(session: Session = Depends(get_db_session)):
@@ -14,7 +15,8 @@ class CompanyService:
 
     def get_all_companies(self) -> list[Company]:
         statement = select(Company)
-        companies = self.session.exec(statement).all()
+        results = self.session.exec(statement)
+        companies = results.all()
         return companies
 
     def get_company_by_id(self, company_id: int) -> Company:

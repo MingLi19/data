@@ -12,6 +12,9 @@ sqlmodel = "^0.0.22"
 pymysql = "^1.1.1"
 cryptography = "^43.0.3"
 
+[tool.poetry.group.dev.dependencies]
+alembic = "^1.14.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

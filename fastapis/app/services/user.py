@@ -1,7 +1,8 @@
-from core.db import get_db_session
 from fastapi import Depends, HTTPException
-from models.user import User, UserCreate, UserUpdate
 from sqlmodel import Session, select
+
+from app.core.db import get_db_session
+from app.models.user import User, UserCreate, UserUpdate, UserWithCompany
 
 
 def get_user_service(session: Session = Depends(get_db_session)):
@@ -23,6 +24,13 @@ class UserService:
             raise HTTPException(status_code=404, detail="用户不存在")
         return user
 
+    def get_user_with_company(self, user_id: int) -> UserWithCompany:
+        user = self.session.get(User, user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="用户不存在")
+        userWithCompany = UserWithCompany.model_validate(user)
+        return userWithCompany
+
     def create_user(self, userToCreate: UserCreate) -> User:
         user = User.model_validate(userToCreate)
         self.session.add(user)
@@ -31,9 +39,7 @@ class UserService:
         return user
 
     def update_user(self, user_id: int, userUpdate: UserUpdate) -> User:
-        userUpdate = UserUpdate.model_validate(userUpdate).model_dump(
-            exclude_unset=True
-        )
+        userUpdate = User.model_validate(userUpdate).model_dump(exclude_unset=True)
         db_user = self.get_user_by_id(user_id)
         db_user.sqlmodel_update(userUpdate)
         self.session.commit()

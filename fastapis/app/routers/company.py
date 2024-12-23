@@ -2,9 +2,10 @@ import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
-from models.company import Company, CompanyCreate, CompanyUpdate
-from models.response import ResponseModel
-from services.company import CompanyService, get_company_service
+
+from app.models.company import Company, CompanyCreate, CompanyUpdate
+from app.models.response import ResponseModel
+from app.services.company import CompanyService, get_company_service
 
 api = APIRouter()
 

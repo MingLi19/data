@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
-from routers import company, meta, user, vessel
+
+from app.routers import company, meta, user, vessel
 
 app = FastAPI(docs_url=None, redoc_url=None)
 

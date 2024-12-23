@@ -2,10 +2,11 @@ import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
-from models.equipment import Equipment
-from models.response import ResponseModel
-from models.vessel import Vessel, VesselCreate, VesselUpdate
-from services.vessel import VesselService, get_vessel_service
+
+from app.models.equipment import Equipment
+from app.models.response import ResponseModel
+from app.models.vessel import Vessel, VesselCreate, VesselUpdate
+from app.services.vessel import VesselService, get_vessel_service
 
 api = APIRouter()
 

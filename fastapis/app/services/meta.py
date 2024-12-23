@@ -1,7 +1,8 @@
-from core.db import get_db_session
 from fastapi import Depends
-from models.meta import FuelType, ShipType, TimeZone
 from sqlmodel import Session, select
+
+from app.core.db import get_db_session
+from app.models.meta import FuelType, ShipType, TimeZone
 
 
 def get_meta_service(session: Session = Depends(get_db_session)):
@@ -26,4 +27,3 @@ class MetaService:
         statement = select(TimeZone)
         time_zones = self.session.exec(statement).all()
         return time_zones
-    

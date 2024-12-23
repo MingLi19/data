@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 ## Data Modal -> Meta Data -> Fuel Type
@@ -33,6 +33,8 @@ class ShipType(SQLModel, table=True):
     name_en: str
     code: str
 
+    vessel: list["Vessel"] = Relationship(back_populates="ship_type")
+
     model_config = {
         "json_schema_extra": {
             "examples": [
@@ -54,6 +56,8 @@ class TimeZone(SQLModel, table=True):
     name_en: str
     explaination: str
 
+    vessel: list["Vessel"] = Relationship(back_populates="time_zone")
+
     model_config = {
         "json_schema_extra": {
             "examples": [
@@ -67,24 +71,3 @@ class TimeZone(SQLModel, table=True):
         }
     }
 
-
-# class Equipment(SQLModel, table=True):
-#     id: int = Field(primary_key=True)
-#     name_cn: str
-#     name_en: str
-#     explaination: str
-#     created_at: datetime = Field(default_factory=datetime.utcnow)
-
-#     model_config = {
-#         "json_schema_extra": {
-#             "examples": [
-#                 {
-#                     "id": 123,
-#                     "name_cn": "主机b",
-#                     "name_en": "Main Engine",
-#                     "explaination": "船舶的主动力设备",
-#                     "created_at": "2024-11-26T12:00:00",
-#                 }
-#             ]
-#         }
-#     }
