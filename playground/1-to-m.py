@@ -40,8 +40,7 @@ def create_heroes():
         vessel = Vessel(name="Titanic")
         me = Equipment(name="ME", fuel_type_ids=[1, 2])
         dg = Equipment(name="DG", fuel_type_ids=[3, 4])
-        me.vessel = vessel
-        dg.vessel = vessel
+        vessel.equipments = [me, dg]
         session.add(vessel)
         session.commit()
 
