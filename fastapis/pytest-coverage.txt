@@ -3,21 +3,15 @@ platform linux -- Python 3.13.1, pytest-8.3.4, pluggy-1.5.0
 rootdir: /home/runner/work/data/data/fastapis
 configfile: pyproject.toml
 plugins: cov-6.0.0, anyio-4.6.2.post1
-collected 8 items
+collected 13 items
 
-tests/test_company_crud.py ....                                          [ 50%]
-tests/test_user_crud.py ....                                             [100%]
+tests/test_company_crud.py .....                                         [ 38%]
+tests/test_meta_r.py ...                                                 [ 61%]
+tests/test_user_crud.py .....                                            [100%]
 
 =============================== warnings summary ===============================
-tests/test_company_crud.py::test_read_company
-tests/test_company_crud.py::test_update_company
-tests/test_company_crud.py::test_delete_company
-tests/test_user_crud.py::test_read_user
-tests/test_user_crud.py::test_read_user
-tests/test_user_crud.py::test_update_user
-tests/test_user_crud.py::test_update_user
-tests/test_user_crud.py::test_delete_user
-tests/test_user_crud.py::test_delete_user
+tests/test_company_crud.py: 4 warnings
+tests/test_user_crud.py: 8 warnings
   /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     return self.default_factory()
 
@@ -35,22 +29,17 @@ Name                       Stmts   Miss  Cover   Missing
 --------------------------------------------------------
 app/core/db.py                10      3    70%   12, 16-17
 app/entity/company.py         12      2    83%   9-10
+app/entity/meta.py            28      1    96%   6
 app/main.py                   11      1    91%   11
-app/model/meta.py             28      1    96%   6
 app/model/vessel.py           47      1    98%   8
-app/router/company.py         29      2    93%   23-24
 app/router/equipment.py       33     33     0%   1-77
-app/router/meta.py            19      6    68%   23-24, 36-37, 47-48
-app/router/user.py            29      2    93%   23-24
 app/router/vessel.py          36     15    58%   23-24, 31-32, 43-44, 53-54, 61-62, 71-77
-app/service/company.py        38      4    89%   18-21
 app/service/equipment.py      36     36     0%   1-49
-app/service/meta.py           21     11    48%   9, 14, 17-19, 22-24, 27-29
-app/service/user.py           43      4    91%   18-20, 25
+app/service/user.py           43      1    98%   25
 app/service/vessel.py         42     28    33%   10, 15, 18-20, 23-26, 29-33, 36-43, 46-49, 52-55
 --------------------------------------------------------
-TOTAL                        505    149    70%
+TOTAL                        505    121    76%
 
-10 files skipped due to complete coverage.
+15 files skipped due to complete coverage.
 
-======================== 8 passed, 12 warnings in 0.34s ========================
+======================= 13 passed, 15 warnings in 0.44s ========================
