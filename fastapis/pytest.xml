@@ -1,1 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="13" time="0.447" timestamp="2025-01-04T13:35:57.410658+00:00" hostname="fv-az1721-600"><testcase classname="tests.test_company_crud" name="test_read_companies" time="0.068" /><testcase classname="tests.test_company_crud" name="test_read_company" time="0.015" /><testcase classname="tests.test_company_crud" name="test_create_company" time="0.019" /><testcase classname="tests.test_company_crud" name="test_update_company" time="0.019" /><testcase classname="tests.test_company_crud" name="test_delete_company" time="0.026" /><testcase classname="tests.test_meta_r" name="test_read_fuel_types" time="0.016" /><testcase classname="tests.test_meta_r" name="test_read_ship_types" time="0.015" /><testcase classname="tests.test_meta_r" name="test_read_time_zones" time="0.014" /><testcase classname="tests.test_user_crud" name="test_read_users" time="0.018" /><testcase classname="tests.test_user_crud" name="test_read_user" time="0.017" /><testcase classname="tests.test_user_crud" name="test_create_user" time="0.019" /><testcase classname="tests.test_user_crud" name="test_update_user" time="0.022" /><testcase classname="tests.test_user_crud" name="test_delete_user" time="0.021" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="13" time="0.521" timestamp="2025-01-04T14:27:58.324410+00:00" hostname="fv-az1361-912"><testcase classname="tests.test_company_crud" name="test_read_companies" time="0.067" /><testcase classname="tests.test_company_crud" name="test_read_company" time="0.015" /><testcase classname="tests.test_company_crud" name="test_create_company" time="0.018" /><testcase classname="tests.test_company_crud" name="test_update_company" time="0.019" /><testcase classname="tests.test_company_crud" name="test_delete_company" time="0.026"><failure message="KeyError: 'detail'">client = &lt;starlette.testclient.TestClient object at 0x7f4e7a712fd0&gt;
+setup = None
+
+    def test_delete_company(client: TestClient, setup: None):
+        response = client.delete("/company/1").json()
+        code = response["code"]
+        data = response["data"]
+        assert code == 200
+        assert data["name"] == "Company Test"
+    
+        not_found_response = client.get("/company/1")
+        assert not_found_response.status_code == 404
+&gt;       assert not_found_response.json()["detail"] == "公司不存在"
+E       KeyError: 'detail'
+
+tests/test_company_crud.py:70: KeyError</failure></testcase><testcase classname="tests.test_meta_r" name="test_read_fuel_types" time="0.016" /><testcase classname="tests.test_meta_r" name="test_read_ship_types" time="0.014" /><testcase classname="tests.test_meta_r" name="test_read_time_zones" time="0.014" /><testcase classname="tests.test_user_crud" name="test_read_users" time="0.018" /><testcase classname="tests.test_user_crud" name="test_read_user" time="0.017" /><testcase classname="tests.test_user_crud" name="test_create_user" time="0.018"><failure message="assert 400 == 200">client = &lt;starlette.testclient.TestClient object at 0x7f4e7950e4e0&gt;
+
+    def test_create_user(client):
+        response = client.post(
+            "/user/",
+            json={
+                "name": "User A",
+                "username": "user_a",
+                "hashed_password": "123456",
+                "phone": "12345678999",
+                "company_id": 1,
+            },
+        ).json()
+        code = response["code"]
+        data = response["data"]
+&gt;       assert code == 200
+E       assert 400 == 200
+
+tests/test_user_crud.py:52: AssertionError</failure></testcase><testcase classname="tests.test_user_crud" name="test_update_user" time="0.021" /><testcase classname="tests.test_user_crud" name="test_delete_user" time="0.020" /></testsuite></testsuites>

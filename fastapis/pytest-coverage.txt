@@ -5,10 +5,54 @@ configfile: pyproject.toml
 plugins: cov-6.0.0, anyio-4.6.2.post1
 collected 13 items
 
-tests/test_company_crud.py .....                                         [ 38%]
+tests/test_company_crud.py ....F                                         [ 38%]
 tests/test_meta_r.py ...                                                 [ 61%]
-tests/test_user_crud.py .....                                            [100%]
+tests/test_user_crud.py ..F..                                            [100%]
 
+=================================== FAILURES ===================================
+_____________________________ test_delete_company ______________________________
+
+client = <starlette.testclient.TestClient object at 0x7f4e7a712fd0>
+setup = None
+
+    def test_delete_company(client: TestClient, setup: None):
+        response = client.delete("/company/1").json()
+        code = response["code"]
+        data = response["data"]
+        assert code == 200
+        assert data["name"] == "Company Test"
+    
+        not_found_response = client.get("/company/1")
+        assert not_found_response.status_code == 404
+>       assert not_found_response.json()["detail"] == "公司不存在"
+E       KeyError: 'detail'
+
+tests/test_company_crud.py:70: KeyError
+------------------------------ Captured log call -------------------------------
+ERROR    app.main:main.py:30 Integrity error: request=<starlette.requests.Request object at 0x7f4e7a770210>, exc=
+_______________________________ test_create_user _______________________________
+
+client = <starlette.testclient.TestClient object at 0x7f4e7950e4e0>
+
+    def test_create_user(client):
+        response = client.post(
+            "/user/",
+            json={
+                "name": "User A",
+                "username": "user_a",
+                "hashed_password": "123456",
+                "phone": "12345678999",
+                "company_id": 1,
+            },
+        ).json()
+        code = response["code"]
+        data = response["data"]
+>       assert code == 200
+E       assert 400 == 200
+
+tests/test_user_crud.py:52: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    app.main:main.py:43 Integrity error: request=<starlette.requests.Request object at 0x7f4e79558680>, exc=
 =============================== warnings summary ===============================
 tests/test_company_crud.py: 4 warnings
 tests/test_user_crud.py: 8 warnings
@@ -30,16 +74,21 @@ Name                       Stmts   Miss  Cover   Missing
 app/core/db.py                10      3    70%   12, 16-17
 app/entity/company.py         12      2    83%   9-10
 app/entity/meta.py            28      1    96%   6
-app/main.py                   11      1    91%   11
-app/model/vessel.py           47      1    98%   8
+app/entity/vessel.py          18      1    94%   9
+app/main.py                   25      1    96%   19
+app/model/vessel.py           34      1    97%   7
 app/router/equipment.py       33     33     0%   1-77
-app/router/vessel.py          36     15    58%   23-24, 31-32, 43-44, 53-54, 61-62, 71-77
+app/router/user.py            29      1    97%   30
+app/router/vessel.py          37     15    59%   24-25, 32-33, 44-45, 54-55, 60-61, 70-76
 app/service/equipment.py      36     36     0%   1-49
-app/service/user.py           43      1    98%   25
-app/service/vessel.py         42     28    33%   10, 15, 18-20, 23-26, 29-33, 36-43, 46-49, 52-55
+app/service/user.py           49      5    90%   27, 43-46
+app/service/vessel.py         43     28    35%   11, 16, 19-21, 24-27, 30-34, 37-42, 45-48, 51-54
 --------------------------------------------------------
-TOTAL                        505    121    76%
+TOTAL                        539    127    76%
 
 15 files skipped due to complete coverage.
 
-======================= 13 passed, 15 warnings in 0.44s ========================
+=========================== short test summary info ============================
+FAILED tests/test_company_crud.py::test_delete_company - KeyError: 'detail'
+FAILED tests/test_user_crud.py::test_create_user - assert 400 == 200
+================== 2 failed, 11 passed, 15 warnings in 0.51s ===================
