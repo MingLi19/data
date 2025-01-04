@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 @api.get("", summary="获取所有公司")
-async def get_companies(
+async def read_companies(
     service: CompanyService = Depends(get_company_service),
 ) -> ResponseModel[list[Company]]:
     """
@@ -33,7 +33,7 @@ async def create_company(
 
 
 @api.get("/{company_id}", summary="获取单个公司详情")
-async def get_company(
+async def read_company(
     company_id: Annotated[int, Path(description="公司ID")],
     service: CompanyService = Depends(get_company_service),
 ) -> ResponseModel[Company]:

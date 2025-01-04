@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from app.model.equipment import Equipment
 
 from app.entity.company import Company
-from app.model.meta import ShipType, TimeZone
+from app.entity.meta import ShipType, TimeZone
 
 
 class VesselBase(SQLModel):

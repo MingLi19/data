@@ -1,7 +1,8 @@
 import pytest
+from sqlmodel import Session
+
 from app.entity.company import Company
 from app.entity.user import User
-from sqlmodel import Session
 
 
 @pytest.fixture(name="setup")
@@ -17,6 +18,14 @@ def setup(session: Session):
     session.add(test_user)
     session.commit()
     session.close()
+
+
+def test_read_users(client, setup):
+    response = client.get("/user/").json()
+    code = response["code"]
+    data = response["data"]
+    assert code == 200
+    assert data.__len__() == 1
 
 
 def test_read_user(client, setup):

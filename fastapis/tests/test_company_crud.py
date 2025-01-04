@@ -15,6 +15,14 @@ def setup(session: Session):
     session.close()
 
 
+def test_read_companies(client: TestClient, setup: None):
+    response = client.get("/company/").json()
+    code = response["code"]
+    data = response["data"]
+    assert code == 200
+    assert data.__len__() == 1
+
+
 def test_read_company(client: TestClient, setup: None):
     response = client.get("/company/1").json()
     code = response["code"]
