@@ -1,6 +1,10 @@
 from sqlmodel import Session, create_engine
 
-DATABASE_URL = "mysql+pymysql://root:123456@localhost:3306/management_system"
+from .config import Settings
+
+settings = Settings()
+
+DATABASE_URL = settings.mysql_dsn.unicode_string()
 
 if DATABASE_URL is not None:
     engine = create_engine(DATABASE_URL, echo=True)

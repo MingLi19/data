@@ -26,6 +26,7 @@ class VesselBase(SQLModel):
 
 class Vessel(VesselBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     equipments: list["Equipment"] = Relationship(back_populates="vessel")
