@@ -3,18 +3,22 @@ platform linux -- Python 3.13.1, pytest-8.3.4, pluggy-1.5.0
 rootdir: /home/runner/work/data/data/fastapis
 configfile: pyproject.toml
 plugins: cov-6.0.0, anyio-4.6.2.post1
-collected 0 items / 1 error
+collected 4 items
 
-==================================== ERRORS ====================================
-_________________ ERROR collecting tests/test_company_crud.py __________________
-ImportError while importing test module '/home/runner/work/data/data/fastapis/tests/test_company_crud.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/opt/hostedtoolcache/Python/3.13.1/x64/lib/python3.13/importlib/__init__.py:88: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-tests/test_company_crud.py:2: in <module>
-    from app.model.company import Company
-E   ImportError: cannot import name 'Company' from 'app.model.company' (/home/runner/work/data/data/fastapis/app/model/company.py)
+tests/test_company_crud.py ....                                          [100%]
+
+=============================== warnings summary ===============================
+tests/test_company_crud.py::test_read_company
+tests/test_company_crud.py::test_update_company
+tests/test_company_crud.py::test_delete_company
+  /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return self.default_factory()
+
+tests/test_company_crud.py::test_create_company
+  /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlmodel/_compat.py:320: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    cls.__pydantic_validator__.validate_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 ----- generated xml file: /home/runner/work/data/data/fastapis/pytest.xml ------
 
 ---------- coverage: platform linux, python 3.13.1-final-0 -----------
@@ -25,22 +29,19 @@ app/entity/company.py         12      2    83%   9-10
 app/main.py                   11      1    91%   11
 app/model/meta.py             28      1    96%   6
 app/model/vessel.py           47      1    98%   8
-app/router/company.py         29     10    66%   23-24, 31-32, 43-44, 53-54, 61-62
+app/router/company.py         29      2    93%   23-24
 app/router/equipment.py       33     33     0%   1-77
 app/router/meta.py            19      6    68%   23-24, 36-37, 47-48
 app/router/user.py            28     10    64%   22-23, 30-31, 42-43, 52-53, 60-61
 app/router/vessel.py          36     15    58%   23-24, 31-32, 43-44, 53-54, 61-62, 71-77
-app/service/company.py        38     25    34%   10, 15, 18-21, 24-27, 30-34, 37-44, 47-50
+app/service/company.py        38      4    89%   18-21
 app/service/equipment.py      36     36     0%   1-49
 app/service/meta.py           21     11    48%   9, 14, 17-19, 22-24, 27-29
 app/service/user.py           42     29    31%   9, 14, 17-19, 22-25, 28-32, 35-39, 42-47, 50-53
 app/service/vessel.py         42     28    33%   10, 15, 18-20, 23-26, 29-33, 36-43, 46-49, 52-55
 --------------------------------------------------------
-TOTAL                        500    211    58%
+TOTAL                        500    182    64%
 
 9 files skipped due to complete coverage.
 
-=========================== short test summary info ============================
-ERROR tests/test_company_crud.py
-!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-=============================== 1 error in 0.20s ===============================
+======================== 4 passed, 4 warnings in 0.23s =========================
