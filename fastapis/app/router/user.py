@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Path
 
 from app.entity.user import User
 from app.model.response import ResponseModel
-from app.model.user import UserCreate, UserUpdate, UserWithCompany
+from app.model.user import UserCreate, UserPublic, UserUpdate
 from app.service.user import UserService, get_user_service
 
 api = APIRouter()
@@ -25,9 +25,7 @@ async def get_users(
 
 
 @api.post("", summary="创建用户")
-async def create_user(
-    user: UserCreate, service: UserService = Depends(get_user_service)
-) -> ResponseModel[User]:
+async def create_user(user: UserCreate, service: UserService = Depends(get_user_service)) -> ResponseModel[User]:
     user = service.create_user(user)
     return {"code": 200, "data": user, "message": "用户创建成功"}
 
@@ -36,7 +34,7 @@ async def create_user(
 async def get_user(
     user_id: Annotated[int, Path(description="用户ID")],
     service: UserService = Depends(get_user_service),
-) -> ResponseModel[UserWithCompany]:
+) -> ResponseModel[UserPublic]:
     """
     首页，显示用户信息
     """
@@ -55,8 +53,6 @@ async def update_user(
 
 
 @api.delete("/{user_id}", summary="删除用户")
-async def delete_user(
-    user_id: int, service: UserService = Depends(get_user_service)
-) -> ResponseModel[User]:
+async def delete_user(user_id: int, service: UserService = Depends(get_user_service)) -> ResponseModel[User]:
     user = service.delete_user(user_id)
     return {"code": 200, "data": user, "message": "用户删除成功"}

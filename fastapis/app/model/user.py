@@ -55,5 +55,5 @@ class UserUpdate(UserBase):
     }
 
 
-class UserWithCompany(UserBase):
+class UserPublic(UserBase):
     company: Company

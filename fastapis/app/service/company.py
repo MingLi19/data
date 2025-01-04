@@ -1,7 +1,8 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
+from app.core.error import NotFoundException
 from app.entity.company import Company
 from app.model.company import CompanyCreate, CompanyUpdate
 
@@ -23,7 +24,7 @@ class CompanyService:
     def get_company_by_id(self, company_id: int) -> Company:
         company = self.session.get(Company, company_id)
         if not company:
-            raise HTTPException(status_code=404, detail="公司不存在")
+            raise NotFoundException(detail="公司不存在")
         return company
 
     def create_company(self, companyToCreate: CompanyCreate) -> Company:
@@ -34,9 +35,7 @@ class CompanyService:
         return company
 
     def update_company(self, company_id: int, companyUpdate: CompanyUpdate) -> Company:
-        companyUpdate = CompanyUpdate.model_validate(companyUpdate).model_dump(
-            exclude_unset=True
-        )
+        companyUpdate = CompanyUpdate.model_validate(companyUpdate).model_dump(exclude_unset=True)
         db_company = self.get_company_by_id(company_id)
         db_company.sqlmodel_update(companyUpdate)
         self.session.commit()

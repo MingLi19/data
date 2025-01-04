@@ -3,9 +3,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 
+from app.entity.vessel import Vessel
 from app.model.equipment import Equipment
 from app.model.response import ResponseModel
-from app.model.vessel import Vessel, VesselCreate, VesselUpdate
+from app.model.vessel import VesselCreate, VesselUpdate
 from app.service.vessel import VesselService, get_vessel_service
 
 api = APIRouter()
@@ -55,9 +56,7 @@ async def update_vessel(
 
 
 @api.delete("/{vessel_id}", summary="删除船舶")
-async def delete_vessel(
-    vessel_id: int, service: VesselService = Depends(get_vessel_service)
-) -> ResponseModel[Vessel]:
+async def delete_vessel(vessel_id: int, service: VesselService = Depends(get_vessel_service)) -> ResponseModel[Vessel]:
     vessel = service.delete_vessel(vessel_id)
     return {"code": 200, "data": vessel, "message": "船舶删除成功"}
 
