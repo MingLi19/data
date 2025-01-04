@@ -4,13 +4,13 @@ from app.entity.company import Company
 
 
 class UserBase(SQLModel):
-    name: str
+    name: str = Field(nullable=False)
     username: str = Field(unique=True, nullable=False)
-    hashed_password: str
-    phone: str
-    is_admin: bool
-    is_system_admin: bool
-    disabled: bool
+    hashed_password: str = Field(nullable=False)
+    phone: str = Field(nullable=False)
+    is_admin: bool = False
+    is_system_admin: bool = False
+    disabled: bool = False
 
 
 class UserCreate(UserBase):

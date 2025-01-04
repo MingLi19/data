@@ -1,4 +1,5 @@
 import pytest
+from app.entity.company import Company
 from app.entity.user import User
 from sqlmodel import Session
 
@@ -7,7 +8,11 @@ from sqlmodel import Session
 def setup(session: Session):
     test_user = User(
         id=1,
-        name="Company Test",
+        name="User Test",
+        username="user_test",
+        hashed_password="123456",
+        phone="12345678999",
+        company=Company(id=1, name="Company Test"),
     )
     session.add(test_user)
     session.commit()
@@ -19,7 +24,7 @@ def test_read_user(client, setup):
     code = response["code"]
     data = response["data"]
     assert code == 200
-    assert data["name"] == "Company Test"
+    assert data["name"] == "User Test"
 
 
 def test_create_user(client):
@@ -27,6 +32,10 @@ def test_create_user(client):
         "/user/",
         json={
             "name": "User A",
+            "username": "user_a",
+            "hashed_password": "123456",
+            "phone": "12345678999",
+            "company_id": 1,
         },
     ).json()
     code = response["code"]
@@ -40,8 +49,13 @@ def test_update_user(client, setup):
         "/user/1",
         json={
             "name": "User B",
+            "username": "user_b",
+            "hashed_password": "123456",
+            "phone": "12345678999",
+            "company_id": 1,
         },
     ).json()
+    print(response)
     code = response["code"]
     data = response["data"]
     assert code == 200
@@ -53,7 +67,7 @@ def test_delete_user(client, setup):
     code = response["code"]
     data = response["data"]
     assert code == 200
-    assert data["name"] == "Company Test"
+    assert data["name"] == "User Test"
 
     not_found_response = client.get("/user/1")
     assert not_found_response.status_code == 404
