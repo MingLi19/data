@@ -6,14 +6,22 @@ jobs:
   pytest:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - name: Install poetry
-          run: pipx install poetry
-        - uses: actions/setup-python@v5
-          with:
-            python-version: '3.13'
-            cache: 'poetry'
-        - run: |
-            cd fastapis
-            poetry install
-            poetry run pytest
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "poetry"
+      - run: |
+          cd fastapis
+          poetry install
+      - name: Build coverage file
+        run: |
+          cd fastapis
+          poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=app tests/ | tee pytest-coverage.txt
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./fastapis/tests/pytest-coverage.txt
+          junitxml-path: ./fastapis/tests/pytest.xml
