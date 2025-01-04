@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="0.209" timestamp="2025-01-04T12:16:21.173407+00:00" hostname="fv-az1770-194"><testcase classname="" name="tests.test_company_crud" time="0.000"><error message="collection failure">ImportError while importing test module '/home/runner/work/data/data/fastapis/tests/test_company_crud.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.13.1/x64/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_company_crud.py:2: in &lt;module&gt;
+    from app.model.company import Company
+E   ImportError: cannot import name 'Company' from 'app.model.company' (/home/runner/work/data/data/fastapis/app/model/company.py)</error></testcase></testsuite></testsuites>
