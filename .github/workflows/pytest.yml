@@ -13,5 +13,7 @@ jobs:
           with:
             python-version: '3.13'
             cache: 'poetry'
-        - run: poetry install
-        - run: poetry run pytest
+        - run: |
+            cd fastapis
+            poetry install
+            poetry run pytest
