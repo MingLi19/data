@@ -3,14 +3,692 @@ platform linux -- Python 3.13.1, pytest-8.3.4, pluggy-1.5.0
 rootdir: /home/runner/work/data/data/fastapis
 configfile: pyproject.toml
 plugins: cov-6.0.0, anyio-4.6.2.post1
-collected 4 items
+collected 8 items
 
-tests/test_company_crud.py ....                                          [100%]
+tests/test_company_crud.py ....                                          [ 50%]
+tests/test_user_crud.py EFEE                                             [100%]
 
+==================================== ERRORS ====================================
+_______________________ ERROR at setup of test_read_user _______________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x7f84f45c3950>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f45f6fd0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f45c3a10>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x7f84f3360e10>
+parameters = [('Company Test', None, None, None, None, None, ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f45f6fd0>
+cursor = <sqlite3.Cursor object at 0x7f84f3395540>
+statement = 'INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+parameters = ('Company Test', None, None, None, None, None, ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f45c3a10>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: NOT NULL constraint failed: user.username
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/default.py:941: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+session = <sqlmodel.orm.session.Session object at 0x7f84f3323950>
+
+    @pytest.fixture(name="setup")
+    def setup(session: Session):
+        test_user = User(
+            id=1,
+            name="Company Test",
+        )
+        session.add(test_user)
+>       session.commit()
+
+tests/test_user_crud.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:2028: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:1313: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:1288: in _prepare_impl
+    self.session.flush()
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4352: in flush
+    self._flush(objects)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4487: in _flush
+    with util.safe_reraise():
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/util/langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4448: in _flush
+    flush_context.execute()
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py:466: in execute
+    rec.execute(self)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py:93: in save_obj
+    _emit_insert_statements(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f45f6fd0>
+cursor = <sqlite3.Cursor object at 0x7f84f3395540>
+statement = 'INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+parameters = ('Company Test', None, None, None, None, None, ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f45c3a10>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: user.username
+E       [SQL: INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('Company Test', None, None, None, None, None, None, 1, '2025-01-04 12:46:26.757443', None)]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/default.py:941: IntegrityError
+______________________ ERROR at setup of test_update_user ______________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x7f84f33dabd0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f3361e50>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f33db350>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x7f84f3361810>
+parameters = [('Company Test', None, None, None, None, None, ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f3361e50>
+cursor = <sqlite3.Cursor object at 0x7f84f151dc40>
+statement = 'INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+parameters = ('Company Test', None, None, None, None, None, ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f33db350>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: NOT NULL constraint failed: user.username
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/default.py:941: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+session = <sqlmodel.orm.session.Session object at 0x7f84f2174160>
+
+    @pytest.fixture(name="setup")
+    def setup(session: Session):
+        test_user = User(
+            id=1,
+            name="Company Test",
+        )
+        session.add(test_user)
+>       session.commit()
+
+tests/test_user_crud.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:2028: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:1313: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:1288: in _prepare_impl
+    self.session.flush()
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4352: in flush
+    self._flush(objects)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4487: in _flush
+    with util.safe_reraise():
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/util/langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4448: in _flush
+    flush_context.execute()
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py:466: in execute
+    rec.execute(self)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py:93: in save_obj
+    _emit_insert_statements(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f3361e50>
+cursor = <sqlite3.Cursor object at 0x7f84f151dc40>
+statement = 'INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+parameters = ('Company Test', None, None, None, None, None, ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f33db350>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: user.username
+E       [SQL: INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('Company Test', None, None, None, None, None, None, 1, '2025-01-04 12:46:27.719448', None)]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/default.py:941: IntegrityError
+______________________ ERROR at setup of test_delete_user ______________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x7f84f45c3a10>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f45f4f50>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f33db4d0>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x7f84f45f5090>
+parameters = [('Company Test', None, None, None, None, None, ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f45f4f50>
+cursor = <sqlite3.Cursor object at 0x7f84f45e15c0>
+statement = 'INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+parameters = ('Company Test', None, None, None, None, None, ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f33db4d0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: NOT NULL constraint failed: user.username
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/default.py:941: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+session = <sqlmodel.orm.session.Session object at 0x7f84f334f570>
+
+    @pytest.fixture(name="setup")
+    def setup(session: Session):
+        test_user = User(
+            id=1,
+            name="Company Test",
+        )
+        session.add(test_user)
+>       session.commit()
+
+tests/test_user_crud.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:2028: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:1313: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:1288: in _prepare_impl
+    self.session.flush()
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4352: in flush
+    self._flush(objects)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4487: in _flush
+    with util.safe_reraise():
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/util/langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/session.py:4448: in _flush
+    flush_context.execute()
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py:466: in execute
+    rec.execute(self)
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py:93: in save_obj
+    _emit_insert_statements(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x7f84f45f4f50>
+cursor = <sqlite3.Cursor object at 0x7f84f45e15c0>
+statement = 'INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+parameters = ('Company Test', None, None, None, None, None, ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x7f84f33db4d0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: user.username
+E       [SQL: INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('Company Test', None, None, None, None, None, None, 1, '2025-01-04 12:46:28.667824', None)]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+../../../../.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlalchemy/engine/default.py:941: IntegrityError
+=================================== FAILURES ===================================
+_______________________________ test_create_user _______________________________
+
+client = <starlette.testclient.TestClient object at 0x7f84f33c8b90>
+
+    def test_create_user(client):
+        response = client.post(
+            "/user/",
+            json={
+                "name": "User A",
+            },
+        ).json()
+>       code = response["code"]
+E       KeyError: 'code'
+
+tests/test_user_crud.py:32: KeyError
 =============================== warnings summary ===============================
 tests/test_company_crud.py::test_read_company
 tests/test_company_crud.py::test_update_company
 tests/test_company_crud.py::test_delete_company
+tests/test_user_crud.py::test_read_user
+tests/test_user_crud.py::test_update_user
+tests/test_user_crud.py::test_delete_user
   /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     return self.default_factory()
 
@@ -32,16 +710,30 @@ app/model/vessel.py           47      1    98%   8
 app/router/company.py         29      2    93%   23-24
 app/router/equipment.py       33     33     0%   1-77
 app/router/meta.py            19      6    68%   23-24, 36-37, 47-48
-app/router/user.py            28     10    64%   22-23, 30-31, 42-43, 52-53, 60-61
+app/router/user.py            29     10    66%   23-24, 31-32, 43-44, 53-54, 61-62
 app/router/vessel.py          36     15    58%   23-24, 31-32, 43-44, 53-54, 61-62, 71-77
 app/service/company.py        38      4    89%   18-21
 app/service/equipment.py      36     36     0%   1-49
 app/service/meta.py           21     11    48%   9, 14, 17-19, 22-24, 27-29
-app/service/user.py           42     29    31%   9, 14, 17-19, 22-25, 28-32, 35-39, 42-47, 50-53
+app/service/user.py           43     27    37%   18-20, 23-26, 29-33, 36-40, 43-48, 51-54
 app/service/vessel.py         42     28    33%   10, 15, 18-20, 23-26, 29-33, 36-43, 46-49, 52-55
 --------------------------------------------------------
-TOTAL                        500    182    64%
+TOTAL                        505    180    64%
 
-9 files skipped due to complete coverage.
+10 files skipped due to complete coverage.
 
-======================== 4 passed, 4 warnings in 0.23s =========================
+=========================== short test summary info ============================
+FAILED tests/test_user_crud.py::test_create_user - KeyError: 'code'
+ERROR tests/test_user_crud.py::test_read_user - sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: user.username
+[SQL: INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('Company Test', None, None, None, None, None, None, 1, '2025-01-04 12:46:26.757443', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+ERROR tests/test_user_crud.py::test_update_user - sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: user.username
+[SQL: INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('Company Test', None, None, None, None, None, None, 1, '2025-01-04 12:46:27.719448', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+ERROR tests/test_user_crud.py::test_delete_user - sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: user.username
+[SQL: INSERT INTO user (name, username, hashed_password, phone, is_admin, is_system_admin, disabled, id, created_at, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('Company Test', None, None, None, None, None, None, 1, '2025-01-04 12:46:28.667824', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+============== 1 failed, 4 passed, 7 warnings, 3 errors in 3.07s ===============
