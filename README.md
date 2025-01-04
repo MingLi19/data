@@ -1,7 +1,7 @@
 # 项目使用工具
 
 ## API: FastAPI
-https://github.com/fastapi/fastapi
+https://github.com/fastapi/fastapi ![GitHub Repo stars](https://img.shields.io/github/stars/fastapi/fastapi)
 
 ## ORM: SQLModel
 https://github.com/fastapi/sqlmodel
