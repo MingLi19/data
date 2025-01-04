@@ -3,9 +3,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 
-from app.models.company import Company, CompanyCreate, CompanyUpdate
-from app.models.response import ResponseModel
-from app.services.company import CompanyService, get_company_service
+from app.entity.company import Company
+from app.model.company import CompanyCreate, CompanyUpdate
+from app.model.response import ResponseModel
+from app.service.company import CompanyService, get_company_service
 
 api = APIRouter()
 

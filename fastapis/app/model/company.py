@@ -1,27 +1,12 @@
-from datetime import datetime
-from typing import TYPE_CHECKING
-
-from sqlmodel import Field, Relationship, SQLModel
-
-if TYPE_CHECKING:
-    from app.models.user import User
-    from app.models.vessel import Vessel
+from sqlmodel import Field, SQLModel
 
 
 class CompanyBase(SQLModel):
     name: str = Field(unique=True, nullable=False)
-    address: str | None
-    contact_person: str | None
-    contact_phone: str | None
-    contact_email: str | None
-
-
-class Company(CompanyBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    users: list["User"] = Relationship(back_populates="company")
-    vessels: list["Vessel"] = Relationship(back_populates="company")
+    address: str | None = None
+    contact_person: str | None = None
+    contact_phone: str | None = None
+    contact_email: str | None = None
 
 
 class CompanyCreate(CompanyBase):

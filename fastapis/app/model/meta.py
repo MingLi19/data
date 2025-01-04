@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.models.vessel import Vessel
+    from app.model.vessel import Vessel
 
 
 ## Data Modal -> Meta Data -> Fuel Type

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field, Relationship, SQLModel
 
-from app.models.vessel import Vessel
+from app.model.vessel import Vessel
 
 
 class EquipmentBase(SQLModel):

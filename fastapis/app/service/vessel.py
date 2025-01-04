@@ -2,8 +2,8 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
-from app.models.equipment import Equipment
-from app.models.vessel import Vessel, VesselCreate, VesselUpdate
+from app.model.equipment import Equipment
+from app.model.vessel import Vessel, VesselCreate, VesselUpdate
 
 
 def get_vessel_service(session: Session = Depends(get_db_session)):

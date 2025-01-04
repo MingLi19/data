@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
-from app.models.user import User, UserCreate, UserUpdate, UserWithCompany
+from app.model.user import User, UserCreate, UserUpdate, UserWithCompany
 
 
 def get_user_service(session: Session = Depends(get_db_session)):

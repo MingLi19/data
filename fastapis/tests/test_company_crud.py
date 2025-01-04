@@ -1,5 +1,5 @@
 import pytest
-from app.models.company import Company
+from app.model.company import Company
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
@@ -9,10 +9,6 @@ def setup(session: Session):
     test_company = Company(
         id=1,
         name="Company Test",
-        address="Address Test",
-        contact_person="John Doe",
-        contact_phone="12345678",
-        contact_email="test@163.com",
     )
     session.add(test_company)
     session.commit()
@@ -32,10 +28,6 @@ def test_create_company(client: TestClient):
         "/company/",
         json={
             "name": "Company A",
-            "address": "123 Main St, New York, NY",
-            "contact_person": "John Doe",
-            "contact_phone": "12345678",
-            "contact_email": "test@163.com",
         },
     ).json()
     code = response["code"]
@@ -49,12 +41,9 @@ def test_update_company(client: TestClient, setup: None):
         "/company/1",
         json={
             "name": "Company B",
-            "address": "123 Main St, New York, NY",
-            "contact_person": "John Doe",
-            "contact_phone": "12345678",
-            "contact_email": "test@163.com",
         },
     ).json()
+    print(response)
     code = response["code"]
     data = response["data"]
     assert code == 200

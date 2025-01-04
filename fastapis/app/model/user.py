@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field, Relationship, SQLModel
 
-from app.models.company import Company
+from app.entity.company import Company
 
 
 class UserBase(SQLModel):

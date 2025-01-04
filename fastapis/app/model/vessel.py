@@ -5,10 +5,10 @@ from pydantic import BaseModel
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.models.equipment import Equipment
+    from app.model.equipment import Equipment
 
-from app.models.company import Company
-from app.models.meta import ShipType, TimeZone
+from app.entity.company import Company
+from app.model.meta import ShipType, TimeZone
 
 
 class VesselBase(SQLModel):

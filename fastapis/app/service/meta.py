@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
-from app.models.meta import FuelType, ShipType, TimeZone
+from app.model.meta import FuelType, ShipType, TimeZone
 
 
 def get_meta_service(session: Session = Depends(get_db_session)):

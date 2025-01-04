@@ -2,7 +2,8 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
-from app.models.company import Company, CompanyCreate, CompanyUpdate
+from app.entity.company import Company
+from app.model.company import CompanyCreate, CompanyUpdate
 
 
 def get_company_service(session: Session = Depends(get_db_session)):

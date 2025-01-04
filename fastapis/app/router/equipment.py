@@ -2,13 +2,14 @@ import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Path
-from models.equipment import Equipment, EquipmentCreate, EquipmentUpdate
-from models.response import ResponseModel
-from services.equipment import EquipmentService, get_equipment_service
+from model.equipment import Equipment, EquipmentCreate, EquipmentUpdate
+from model.response import ResponseModel
+from service.equipment import EquipmentService, get_equipment_service
 
 api = APIRouter()
 
 logger = logging.getLogger(__name__)
+
 
 @api.get("", summary="获取所有设备")
 async def get_equipments(
@@ -23,16 +24,18 @@ async def get_equipments(
 
 @api.post("", summary="创建设备")
 async def create_equipment(
-    equipment: EquipmentCreate, service: EquipmentService = Depends(get_equipment_service)
+    equipment: EquipmentCreate,
+    service: EquipmentService = Depends(get_equipment_service),
 ) -> ResponseModel[Equipment]:
     """
     创建新的设备 - 关键操作
     """
     logger.info(f"请求创建设备: {equipment.name}")
     created_equipment = service.create_equipment(equipment)
-    logger.info(f"成功创建设备: ID={created_equipment.id}, 名称={created_equipment.name}")
+    logger.info(
+        f"成功创建设备: ID={created_equipment.id}, 名称={created_equipment.name}"
+    )
     return {"code": 200, "data": created_equipment, "message": "设备创建成功"}
-
 
 
 @api.get("/{equipment_id}", summary="获取单个设备详情")
@@ -61,6 +64,7 @@ async def update_equipment(
     """
     equipment = service.update_equipment(equipment_id, equipment)
     return {"code": 200, "data": equipment, "message": "设备信息更新成功"}
+
 
 @api.delete("/{equipment_id}", summary="删除设备")
 async def delete_equipment(

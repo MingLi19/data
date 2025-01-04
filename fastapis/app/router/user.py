@@ -3,9 +3,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 
-from app.models.response import ResponseModel
-from app.models.user import User, UserCreate, UserUpdate, UserWithCompany
-from app.services.user import UserService, get_user_service
+from app.model.response import ResponseModel
+from app.model.user import User, UserCreate, UserUpdate, UserWithCompany
+from app.service.user import UserService, get_user_service
 
 api = APIRouter()
 
