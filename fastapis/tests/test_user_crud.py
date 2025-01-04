@@ -1,62 +1,60 @@
 import pytest
-from app.entity.company import Company
-from fastapi.testclient import TestClient
+from app.entity.user import User
 from sqlmodel import Session
 
 
 @pytest.fixture(name="setup")
 def setup(session: Session):
-    test_company = Company(
+    test_user = User(
         id=1,
         name="Company Test",
     )
-    session.add(test_company)
+    session.add(test_user)
     session.commit()
     session.close()
 
 
-def test_read_company(client: TestClient, setup: None):
-    response = client.get("/company/1").json()
+def test_read_user(client, setup):
+    response = client.get("/user/1").json()
     code = response["code"]
     data = response["data"]
     assert code == 200
     assert data["name"] == "Company Test"
 
 
-def test_create_company(client: TestClient):
+def test_create_user(client):
     response = client.post(
-        "/company/",
+        "/user/",
         json={
-            "name": "Company A",
+            "name": "User A",
         },
     ).json()
     code = response["code"]
     data = response["data"]
     assert code == 200
-    assert data["name"] == "Company A"
+    assert data["name"] == "User A"
 
 
-def test_update_company(client: TestClient, setup: None):
+def test_update_user(client, setup):
     response = client.put(
-        "/company/1",
+        "/user/1",
         json={
-            "name": "Company B",
+            "name": "User B",
         },
     ).json()
-    print(response)
     code = response["code"]
     data = response["data"]
     assert code == 200
-    assert data["name"] == "Company B"
+    assert data["name"] == "User B"
 
 
-def test_delete_company(client: TestClient, setup: None):
-    response = client.delete("/company/1").json()
+def test_delete_user(client, setup):
+    response = client.delete("/user/1").json()
     code = response["code"]
     data = response["data"]
     assert code == 200
     assert data["name"] == "Company Test"
 
-    not_found_response = client.get("/company/1")
+    not_found_response = client.get("/user/1")
     assert not_found_response.status_code == 404
-    assert not_found_response.json()["detail"] == "公司不存在"
+    assert not_found_response.json()["detail"] == "用户不存在"
