@@ -1,5 +1,5 @@
 <!-- Pytest Coverage Comment:Begin -->
-<!-- Pytest Coverage Comment:End -->
+\n<!-- Pytest Coverage Comment:End -->
 
 # 项目使用工具
 
