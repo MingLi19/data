@@ -6,7 +6,6 @@ from sqlmodel import Session
 
 @pytest.fixture(name="setup")
 def setup(session: Session):
-    print("setup start")
     test_company = Company(
         id=1,
         name="Company Test",
@@ -18,7 +17,6 @@ def setup(session: Session):
     session.add(test_company)
     session.commit()
     session.close()
-    print("setup done")
 
 
 def test_read_company(client: TestClient, setup: None):
@@ -44,3 +42,31 @@ def test_create_company(client: TestClient):
     data = response["data"]
     assert code == 200
     assert data["name"] == "Company A"
+
+
+def test_update_company(client: TestClient, setup: None):
+    response = client.put(
+        "/company/1",
+        json={
+            "name": "Company B",
+            "address": "123 Main St, New York, NY",
+            "contact_person": "John Doe",
+            "contact_phone": "12345678",
+            "contact_email": "test@163.com",
+        },
+    ).json()
+    code = response["code"]
+    data = response["data"]
+    assert code == 200
+    assert data["name"] == "Company B"
+
+
+def test_delete_company(client: TestClient, setup: None):
+    response = client.delete("/company/1").json()
+    code = response["code"]
+    data = response["data"]
+    assert code == 200
+    assert data["name"] == "Company Test"
+
+    not_found_response = client.get("/company/1")
+    assert not_found_response.status_code == 404
