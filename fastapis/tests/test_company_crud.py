@@ -1,5 +1,5 @@
 import pytest
-from app.model.company import Company
+from app.entity.company import Company
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
