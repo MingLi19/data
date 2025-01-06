@@ -3,65 +3,24 @@ platform linux -- Python 3.13.1, pytest-8.3.4, pluggy-1.5.0
 rootdir: /home/runner/work/data/data/fastapis
 configfile: pyproject.toml
 plugins: cov-6.0.0, anyio-4.6.2.post1
-collected 13 items
+collected 21 items
 
-tests/test_company_crud.py ....F                                         [ 38%]
-tests/test_meta_r.py ...                                                 [ 61%]
-tests/test_user_crud.py ..F..                                            [100%]
+tests/test_company_crud.py ......                                        [ 28%]
+tests/test_meta_r.py ...                                                 [ 42%]
+tests/test_user_crud.py ......                                           [ 71%]
+tests/test_vessel_crud.py ......                                         [100%]
 
-=================================== FAILURES ===================================
-_____________________________ test_delete_company ______________________________
-
-client = <starlette.testclient.TestClient object at 0x7f4e7a712fd0>
-setup = None
-
-    def test_delete_company(client: TestClient, setup: None):
-        response = client.delete("/company/1").json()
-        code = response["code"]
-        data = response["data"]
-        assert code == 200
-        assert data["name"] == "Company Test"
-    
-        not_found_response = client.get("/company/1")
-        assert not_found_response.status_code == 404
->       assert not_found_response.json()["detail"] == "公司不存在"
-E       KeyError: 'detail'
-
-tests/test_company_crud.py:70: KeyError
------------------------------- Captured log call -------------------------------
-ERROR    app.main:main.py:30 Integrity error: request=<starlette.requests.Request object at 0x7f4e7a770210>, exc=
-_______________________________ test_create_user _______________________________
-
-client = <starlette.testclient.TestClient object at 0x7f4e7950e4e0>
-
-    def test_create_user(client):
-        response = client.post(
-            "/user/",
-            json={
-                "name": "User A",
-                "username": "user_a",
-                "hashed_password": "123456",
-                "phone": "12345678999",
-                "company_id": 1,
-            },
-        ).json()
-        code = response["code"]
-        data = response["data"]
->       assert code == 200
-E       assert 400 == 200
-
-tests/test_user_crud.py:52: AssertionError
------------------------------- Captured log call -------------------------------
-ERROR    app.main:main.py:43 Integrity error: request=<starlette.requests.Request object at 0x7f4e79558680>, exc=
 =============================== warnings summary ===============================
 tests/test_company_crud.py: 4 warnings
-tests/test_user_crud.py: 8 warnings
+tests/test_user_crud.py: 10 warnings
+tests/test_vessel_crud.py: 5 warnings
   /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     return self.default_factory()
 
 tests/test_company_crud.py::test_create_company
 tests/test_user_crud.py::test_create_user
 tests/test_user_crud.py::test_update_user
+tests/test_vessel_crud.py::test_create_vessel
   /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlmodel/_compat.py:320: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     cls.__pydantic_validator__.validate_python(
 
@@ -72,23 +31,20 @@ tests/test_user_crud.py::test_update_user
 Name                       Stmts   Miss  Cover   Missing
 --------------------------------------------------------
 app/core/db.py                10      3    70%   12, 16-17
+app/core/error.py              6      1    83%   8
 app/entity/company.py         12      2    83%   9-10
 app/entity/meta.py            28      1    96%   6
 app/entity/vessel.py          18      1    94%   9
-app/main.py                   25      1    96%   19
-app/model/vessel.py           34      1    97%   7
+app/main.py                   30      5    83%   20, 44-45, 57-58
+app/model/vessel.py           21      1    95%   6
 app/router/equipment.py       33     33     0%   1-77
-app/router/user.py            29      1    97%   30
-app/router/vessel.py          37     15    59%   24-25, 32-33, 44-45, 54-55, 60-61, 70-76
+app/router/vessel.py          37      5    86%   70-76
 app/service/equipment.py      36     36     0%   1-49
-app/service/user.py           49      5    90%   27, 43-46
-app/service/vessel.py         43     28    35%   11, 16, 19-21, 24-27, 30-34, 37-42, 45-48, 51-54
+app/service/user.py           49      2    96%   27, 42
+app/service/vessel.py         44      4    91%   52-55
 --------------------------------------------------------
-TOTAL                        539    127    76%
+TOTAL                        532     94    82%
 
 15 files skipped due to complete coverage.
 
-=========================== short test summary info ============================
-FAILED tests/test_company_crud.py::test_delete_company - KeyError: 'detail'
-FAILED tests/test_user_crud.py::test_create_user - assert 400 == 200
-================== 2 failed, 11 passed, 15 warnings in 0.51s ===================
+======================= 21 passed, 23 warnings in 0.69s ========================
