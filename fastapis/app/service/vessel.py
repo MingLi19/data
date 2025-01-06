@@ -28,6 +28,7 @@ class VesselService:
 
     def create_vessel(self, vesselToCreate: VesselCreate) -> Vessel:
         vessel = Vessel.model_validate(vesselToCreate)
+        print("vessel", vessel)
         self.session.add(vessel)
         self.session.commit()
         self.session.refresh(vessel)

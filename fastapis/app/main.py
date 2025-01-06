@@ -2,6 +2,7 @@ import logging
 from http import HTTPStatus
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
 
@@ -27,7 +28,7 @@ async def custom_swagger_ui_html():
 
 @app.exception_handler(NotFoundException)
 async def not_found_error_handler(request: Request, exc: NotFoundException) -> ResponseModel:
-    logger.error(f"Integrity error: request={request}, exc={exc}")
+    logger.error(f"Not-Found error: request={request}, exc={exc}")
     return JSONResponse(
         status_code=HTTPStatus.NOT_FOUND,
         content={
@@ -47,6 +48,19 @@ async def integrity_error_handler(request: Request, exc: IntegrityException) -> 
             "code": HTTPStatus.BAD_REQUEST,
             "data": None,
             "message": exc.detail,
+        },
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    logger.error(f"Validation error: request={request}, exc={exc}")
+    return JSONResponse(
+        status_code=HTTPStatus.BAD_REQUEST,
+        content={
+            "code": HTTPStatus.BAD_REQUEST,
+            "data": None,
+            "message": exc.errors(),
         },
     )
 

@@ -1,7 +1,8 @@
 import pytest
-from app.entity.company import Company
 from fastapi.testclient import TestClient
 from sqlmodel import Session
+
+from app.entity.company import Company
 
 
 @pytest.fixture(name="setup")
@@ -29,6 +30,12 @@ def test_read_company(client: TestClient, setup: None):
     data = response["data"]
     assert code == 200
     assert data["name"] == "Company Test"
+
+
+def test_read_company_not_found(client: TestClient):
+    response = client.get("/company/2")
+    assert response.status_code == 404
+    assert response.json()["message"] == "公司不存在"
 
 
 def test_create_company(client: TestClient):
@@ -67,4 +74,4 @@ def test_delete_company(client: TestClient, setup: None):
 
     not_found_response = client.get("/company/1")
     assert not_found_response.status_code == 404
-    assert not_found_response.json()["detail"] == "公司不存在"
+    assert not_found_response.json()["message"] == "公司不存在"

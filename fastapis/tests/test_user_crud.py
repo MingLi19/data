@@ -36,7 +36,13 @@ def test_read_user(client, setup):
     assert data["name"] == "User Test"
 
 
-def test_create_user(client):
+def test_read_user_not_found(client):
+    response = client.get("/user/2")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "用户不存在"
+
+
+def test_create_user(client, setup):
     response = client.post(
         "/user/",
         json={

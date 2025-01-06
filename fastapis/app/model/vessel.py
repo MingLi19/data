@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel
 from sqlmodel import Field, SQLModel
 
 if TYPE_CHECKING:
@@ -46,20 +45,8 @@ class VesselCreate(VesselBase):
     }
 
 
-class VesselUpdate(BaseModel):
-    name: str = Field(unique=True, nullable=False)  # 船名，必填且唯一
-    mmsi: str = Field(unique=True, nullable=False)  # 海事识别号，必填且唯一
-    build_date: str  # 建造日期，格式为 'YYYY-MM-DD'
-    gross_tone: float  # 总吨位
-    dead_weight: float  # 装载吨位
-    new_vessel: bool  # 是否为新船
-    hull_clean_date: str | None  # 船体清洁日期
-    engine_overhaul_date: str | None  # 发动机检修日期
-    newly_paint_date: str | None  # 新涂装日期
-    propeller_polish_date: str | None  # 螺旋桨抛光日期
-    company_id: int  # 公司ID
-    ship_type: int  # 船舶类型
-    time_zone: int  # 时区
+class VesselUpdate(VesselBase):
+    pass
 
     model_config = {
         "json_schema_extra": {
