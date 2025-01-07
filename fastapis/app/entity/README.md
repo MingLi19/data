@@ -6,5 +6,6 @@ erDiagram
     Vessel ||..|{ Equipment : has
     Vessel ||--|| VesselType : is
     Vessel ||--|| TimeZone : is
-    Equipment ||--|| FuelType : is
+    Equipment ||--|{ FuelType : is
+    Vessel ||--|{ PowerSpeedCurve : has
 ```

@@ -37,7 +37,7 @@ sqlalchemy.url = mysql+pymysql://root:123456@localhost:3306/management_system
 ### 修改 env.py 文件
 
 ```python
-from app.models.meta import FuelType, ShipType, TimeZone # noqa: F401
+from app.entity.meta import FuelType, ShipType, TimeZone # noqa: F401
 from sqlmodel import SQLModel
 
 target_metadata = SQLModel.metadata
@@ -47,8 +47,8 @@ target_metadata = SQLModel.metadata
 ### 创建迁移脚本
 
 ```shell
-alembic revision --autogenerate -m "create meta data"
-alembic revision -m "insert meta data"
+alembic revision --autogenerate -m "create meta data" # 自动生成
+alembic revision -m "insert meta data" # 手动
 ```
 
 ### 执行迁移脚本
