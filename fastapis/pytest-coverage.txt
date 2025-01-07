@@ -29,24 +29,25 @@ tests/test_vessel_crud.py::test_create_vessel
 ----- generated xml file: /home/runner/work/data/data/fastapis/pytest.xml ------
 
 ---------- coverage: platform linux, python 3.13.1-final-0 -----------
-Name                       Stmts   Miss  Cover   Missing
---------------------------------------------------------
-app/core/db.py                10      3    70%   12, 16-17
-app/core/error.py              9      1    89%   13
-app/entity/company.py         12      2    83%   9-10
-app/entity/meta.py            28      1    96%   6
-app/entity/vessel.py          18      1    94%   9
-app/main.py                   30      3    90%   20, 57-58
-app/model/vessel.py           21      1    95%   6
-app/router/equipment.py       33     33     0%   1-77
-app/router/vessel.py          37      5    86%   70-76
-app/service/company.py        51      4    92%   45-48
-app/service/equipment.py      36     36     0%   1-49
-app/service/user.py           49      2    96%   27, 42
-app/service/vessel.py         44      4    91%   52-55
---------------------------------------------------------
-TOTAL                        547     96    82%
+Name                             Stmts   Miss  Cover   Missing
+--------------------------------------------------------------
+app/core/db.py                      10      3    70%   12, 16-17
+app/core/error.py                    9      1    89%   13
+app/entity/company.py               12      2    83%   9-10
+app/entity/meta.py                  28      1    96%   6
+app/entity/vessel.py                18      1    94%   9
+app/main.py                         30      3    90%   20, 57-58
+app/model/power_speed_curve.py      18     18     0%   1-32
+app/model/vessel.py                 21      1    95%   6
+app/router/equipment.py             33     33     0%   1-77
+app/router/vessel.py                37      5    86%   70-76
+app/service/company.py              51      4    92%   45-48
+app/service/equipment.py            36     36     0%   1-49
+app/service/user.py                 49      2    96%   27, 42
+app/service/vessel.py               44      4    91%   52-55
+--------------------------------------------------------------
+TOTAL                              565    114    80%
 
 14 files skipped due to complete coverage.
 
-======================= 22 passed, 25 warnings in 0.85s ========================
+======================= 22 passed, 25 warnings in 0.79s ========================
