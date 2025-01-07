@@ -3,25 +3,26 @@ platform linux -- Python 3.13.1, pytest-8.3.4, pluggy-1.5.0
 rootdir: /home/runner/work/data/data/fastapis
 configfile: pyproject.toml
 plugins: cov-6.0.0, anyio-4.6.2.post1
-collected 21 items
+collected 22 items
 
-tests/test_company_crud.py ......                                        [ 28%]
-tests/test_meta_r.py ...                                                 [ 42%]
-tests/test_user_crud.py ......                                           [ 71%]
+tests/test_company_crud.py .......                                       [ 31%]
+tests/test_meta_r.py ...                                                 [ 45%]
+tests/test_user_crud.py ......                                           [ 72%]
 tests/test_vessel_crud.py ......                                         [100%]
 
 =============================== warnings summary ===============================
-tests/test_company_crud.py: 4 warnings
+tests/test_company_crud.py: 5 warnings
 tests/test_user_crud.py: 10 warnings
 tests/test_vessel_crud.py: 5 warnings
-  /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  /home/runner/.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     return self.default_factory()
 
 tests/test_company_crud.py::test_create_company
+tests/test_company_crud.py::test_create_company_duplicate
 tests/test_user_crud.py::test_create_user
 tests/test_user_crud.py::test_update_user
 tests/test_vessel_crud.py::test_create_vessel
-  /home/runner/.cache/pypoetry/virtualenvs/fastapis-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlmodel/_compat.py:320: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  /home/runner/.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlmodel/_compat.py:320: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     cls.__pydantic_validator__.validate_python(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -31,20 +32,21 @@ tests/test_vessel_crud.py::test_create_vessel
 Name                       Stmts   Miss  Cover   Missing
 --------------------------------------------------------
 app/core/db.py                10      3    70%   12, 16-17
-app/core/error.py              6      1    83%   8
+app/core/error.py              9      1    89%   13
 app/entity/company.py         12      2    83%   9-10
 app/entity/meta.py            28      1    96%   6
 app/entity/vessel.py          18      1    94%   9
-app/main.py                   30      5    83%   20, 44-45, 57-58
+app/main.py                   30      3    90%   20, 57-58
 app/model/vessel.py           21      1    95%   6
 app/router/equipment.py       33     33     0%   1-77
 app/router/vessel.py          37      5    86%   70-76
+app/service/company.py        51      4    92%   45-48
 app/service/equipment.py      36     36     0%   1-49
 app/service/user.py           49      2    96%   27, 42
 app/service/vessel.py         44      4    91%   52-55
 --------------------------------------------------------
-TOTAL                        532     94    82%
+TOTAL                        547     96    82%
 
-15 files skipped due to complete coverage.
+14 files skipped due to complete coverage.
 
-======================= 21 passed, 23 warnings in 0.69s ========================
+======================= 22 passed, 25 warnings in 0.76s ========================
