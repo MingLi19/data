@@ -51,6 +51,17 @@ def test_create_company(client: TestClient):
     assert data["name"] == "Company A"
 
 
+def test_create_company_duplicate(client: TestClient, setup: None):
+    response = client.post(
+        "/company/",
+        json={
+            "name": "Company Test",
+        },
+    ).json()
+    code = response["code"]
+    assert code == 400
+
+
 def test_update_company(client: TestClient, setup: None):
     response = client.put(
         "/company/1",

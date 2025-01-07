@@ -18,3 +18,10 @@
 ## DB Migration: [alembic](https://github.com/sqlalchemy/alembic) ![GitHub Repo stars](https://img.shields.io/github/stars/sqlalchemy/alembic)
 
 **All Open Source**
+
+```mermaid
+graph TD;
+    项目 --> FastAPI & SQLModel & Alembic & Ruff & Pytest;
+    FastAPI --> Starlette & Pydantic;
+    SQLModel --> SQLAlchemy & Pydantic;
+```

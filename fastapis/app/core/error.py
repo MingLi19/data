@@ -6,3 +6,8 @@ class NotFoundException(Exception):
 class IntegrityException(Exception):
     def __init__(self, detail: str):
         self.detail = detail
+
+
+class UnknownException(Exception):
+    def __init__(self, detail: str):
+        self.detail = detail

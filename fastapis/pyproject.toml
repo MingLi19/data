@@ -1,6 +1,4 @@
 [tool.poetry]
-name = "fastapis"
-version = "0.1.0"
 description = ""
 authors = ["Ming Li <leem7899@163.com>"]
 readme = "README.md"

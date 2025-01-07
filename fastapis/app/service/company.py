@@ -1,10 +1,15 @@
+import logging
+
 from fastapi import Depends
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
-from app.core.error import NotFoundException
+from app.core.error import IntegrityException, NotFoundException, UnknownException
 from app.entity.company import Company
 from app.model.company import CompanyCreate, CompanyUpdate
+
+logger = logging.getLogger(__name__)
 
 
 def get_company_service(session: Session = Depends(get_db_session)):
@@ -29,9 +34,18 @@ class CompanyService:
 
     def create_company(self, companyToCreate: CompanyCreate) -> Company:
         company = Company.model_validate(companyToCreate)
-        self.session.add(company)
-        self.session.commit()
-        self.session.refresh(company)
+        try:
+            self.session.add(company)
+            self.session.commit()
+            self.session.refresh(company)
+        except IntegrityError as e:
+            logger.error("--IntegrityError: %s", e.__str__())
+            self.session.rollback()
+            raise IntegrityException(e.args)
+        except Exception as e:
+            logger.error("--Exception: %s", e.__str__())
+            self.session.rollback()
+            raise UnknownException(e.args)
         return company
 
     def update_company(self, company_id: int, companyUpdate: CompanyUpdate) -> Company:
