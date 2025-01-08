@@ -5,11 +5,6 @@
 3. [Put] /api/v1/todo/:id -> Update a todo
 4. [Delete] /api/v1/todo/:id -> Delete a todo
 
-MVC pattern: Model View Controller 
-Modal: Schema
-View: Frontend
-Controller: Backend Controller (Rest API)
-
 ## 状态码
 
 - 200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。cachable
