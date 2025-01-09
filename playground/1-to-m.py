@@ -1,6 +1,3 @@
-from typing import Dict
-
-from sqlalchemy import JSON, Column
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
 
 
@@ -14,15 +11,18 @@ class Vessel(SQLModel, table=True):
 class Equipment(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    fuel_type_ids: Dict = Field(default_factory=dict, sa_column=Column(JSON))
-
-    # Needed for Column(JSON)
-    class Config:
-        arbitrary_types_allowed = True
 
     vessel_id: int | None = Field(default=None, foreign_key="vessel.id")
-
     vessel: Vessel | None = Relationship(back_populates="equipments")
+
+
+class EquipmentCreate(SQLModel):
+    name: str
+
+
+class VesselCreate(SQLModel):
+    name: str
+    equipments: list["EquipmentCreate"]  # noqa: F821
 
 
 sqlite_file_name = "playground/test.db"
@@ -37,11 +37,13 @@ def create_db_and_tables():
 
 def create_heroes():
     with Session(engine) as session:
-        vessel = Vessel(name="Titanic")
-        me = Equipment(name="ME", fuel_type_ids=[1, 2])
-        dg = Equipment(name="DG", fuel_type_ids=[3, 4])
-        me.vessel = vessel
-        dg.vessel = vessel
+        vesselCreate = VesselCreate(name="Titanic", equipments=[])
+        vessel = Vessel.model_validate(vesselCreate)
+        meCreate = EquipmentCreate(name="ME")
+        dgCreate = EquipmentCreate(name="DG")
+        me = Equipment.model_validate(meCreate)
+        dg = Equipment.model_validate(dgCreate)
+        vessel.equipments = [me, dg]
         session.add(vessel)
         session.commit()
 

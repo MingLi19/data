@@ -19,3 +19,9 @@ ORM Object Relationship Mapping 数据库操作 Select * from table -> Method
 
 # 优势
 1. 前后端解耦 - 灵活，好维护
+
+## MVC架构
+- MVC pattern: Model View Controller 
+- Modal: Schema
+- View: Frontend
+- Controller: Backend Controller (Rest API)
