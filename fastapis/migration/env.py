@@ -5,10 +5,10 @@ from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
 from app.entity.company import Company  # noqa: F401
+from app.entity.equipment import Equipment  # noqa: F401
 from app.entity.meta import FuelType, ShipType, TimeZone  # noqa: F401
 from app.entity.user import User  # noqa: F401
 from app.entity.vessel import Vessel  # noqa: F401
-from app.model.equipment import Equipment  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

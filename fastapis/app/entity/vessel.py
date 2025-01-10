@@ -6,7 +6,7 @@ from sqlmodel import Field, Relationship
 from app.model.vessel import VesselBase
 
 if TYPE_CHECKING:
-    from app.model.equipment import Equipment
+    from app.entity.equipment import Equipment
 
 from app.entity.company import Company
 from app.entity.meta import ShipType, TimeZone

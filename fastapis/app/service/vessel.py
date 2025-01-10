@@ -2,8 +2,8 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
+from app.entity.equipment import Equipment
 from app.entity.vessel import Vessel
-from app.model.equipment import Equipment
 from app.model.vessel import VesselCreate, VesselUpdate
 
 
@@ -27,8 +27,8 @@ class VesselService:
         return vessel
 
     def create_vessel(self, vesselToCreate: VesselCreate) -> Vessel:
+        vesselToCreate.equipments = [Equipment.model_validate(equipment) for equipment in vesselToCreate.equipments]
         vessel = Vessel.model_validate(vesselToCreate)
-        print("vessel", vessel)
         self.session.add(vessel)
         self.session.commit()
         self.session.refresh(vessel)

@@ -2,6 +2,8 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import Field, SQLModel
 
+from app.model.equipment import EquipmentCreate
+
 if TYPE_CHECKING:
     pass
 
@@ -20,7 +22,7 @@ class VesselBase(SQLModel):
 
 
 class VesselCreate(VesselBase):
-    pass
+    equipments: list[EquipmentCreate] = []  # 船舶设备
 
     model_config = {
         "json_schema_extra": {
@@ -39,6 +41,12 @@ class VesselCreate(VesselBase):
                     "company_id": 1,
                     "ship_type": 3,
                     "time_zone": 4,
+                    "equipments": [
+                        {
+                            "name": "发动机",
+                            "type": "柴油机",
+                        }
+                    ],
                 }
             ]
         }
