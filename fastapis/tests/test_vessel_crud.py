@@ -2,12 +2,18 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
+from app.entity.company import Company
 from app.entity.meta import ShipType, TimeZone
 from app.entity.vessel import Vessel
 
 
 @pytest.fixture(name="setup")
 def setup(session: Session):
+    test_company = Company(
+        id=1,
+        name="Company Test",
+    )
+    session.add(test_company)
     test_ship_type = ShipType(
         id=1,
         name_cn="散货船",
@@ -110,8 +116,8 @@ def test_update_vessel(client: TestClient, setup):
             "newly_paint_date": "2024-12-06",
             "propeller_polish_date": "2024-12-06",
             "company_id": 1,
-            "ship_type": 1,
-            "time_zone": 1,
+            "ship_type_id": 1,
+            "time_zone_id": 1,
         },
     ).json()
     code = response["code"]

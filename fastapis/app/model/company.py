@@ -1,8 +1,8 @@
-from sqlmodel import Field, SQLModel
+from pydantic import BaseModel
 
 
-class CompanyBase(SQLModel):
-    name: str = Field(unique=True, nullable=False)
+class CompanyBase(BaseModel):
+    name: str
     address: str | None = None
     contact_person: str | None = None
     contact_phone: str | None = None

@@ -3,13 +3,12 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship
 
+from app.entity.company import Company
+from app.entity.meta import ShipType, TimeZone
 from app.model.vessel import VesselBase
 
 if TYPE_CHECKING:
     from app.entity.equipment import Equipment
-
-from app.entity.company import Company
-from app.entity.meta import ShipType, TimeZone
 
 
 class Vessel(VesselBase, table=True):
@@ -17,7 +16,7 @@ class Vessel(VesselBase, table=True):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    equipments: list["Equipment"] = Relationship(back_populates="vessel")
+    equipments: list["Equipment"] = Relationship(back_populates="vessel", cascade_delete=True)
 
     company_id: int | None = Field(default=None, foreign_key="company.id")
     company: Company | None = Relationship(back_populates="vessels")

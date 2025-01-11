@@ -27,8 +27,10 @@ class VesselService:
         return vessel
 
     def create_vessel(self, vesselToCreate: VesselCreate) -> Vessel:
+        print("vesselToCreate: ", vesselToCreate)
         vesselToCreate.equipments = [Equipment.model_validate(equipment) for equipment in vesselToCreate.equipments]
         vessel = Vessel.model_validate(vesselToCreate)
+        print("vessel: ", vessel)
         self.session.add(vessel)
         self.session.commit()
         self.session.refresh(vessel)
@@ -47,9 +49,3 @@ class VesselService:
         self.session.delete(vessel)
         self.session.commit()
         return vessel
-
-    async def create_vessel_equipments(self, vessel, equipment) -> Equipment:
-        self.session.add(equipment)
-        self.session.add(vessel)
-        self.session.commit()
-        return equipment

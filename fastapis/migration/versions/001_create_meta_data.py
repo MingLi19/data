@@ -1,8 +1,8 @@
 """create meta data
 
-Revision ID: f92875c2b496
+Revision ID: 001
 Revises: 
-Create Date: 2024-12-22 10:33:08.954645
+Create Date: 2025-01-10 20:50:09.674286
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f92875c2b496'
+revision: str = '001'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

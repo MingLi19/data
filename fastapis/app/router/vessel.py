@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Path
 
 from app.entity.vessel import Vessel
 from app.model.response import ResponseModel
-from app.model.vessel import VesselCreate, VesselUpdate
+from app.model.vessel import VesselCreate, VesselPublic, VesselUpdate
 from app.service.vessel import VesselService, get_vessel_service
 
 api = APIRouter()
@@ -36,7 +36,7 @@ async def create_vessel(
 async def get_vessel(
     vessel_id: Annotated[int, Path(description="船舶ID")],
     service: VesselService = Depends(get_vessel_service),
-) -> ResponseModel[Vessel]:
+) -> ResponseModel[VesselPublic]:
     """
     首页，显示船舶信息
     """

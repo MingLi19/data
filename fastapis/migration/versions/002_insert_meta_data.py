@@ -1,8 +1,8 @@
 """insert meta data
 
-Revision ID: 792c57a87730
-Revises: f92875c2b496
-Create Date: 2024-12-22 10:35:15.932156
+Revision ID: 002
+Revises: 001
+Create Date: 2025-01-10 20:53:56.119103
 
 """
 
@@ -11,8 +11,8 @@ from typing import Sequence, Union
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "792c57a87730"
-down_revision: Union[str, None] = "f92875c2b496"
+revision: str = "002"
+down_revision: Union[str, None] = "001"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -89,7 +89,3 @@ def upgrade() -> None:
             ('西十二区', 'UTC-12', '西十二区 172.5° W～180° W 180°');
             """
     )
-
-
-def downgrade() -> None:
-    pass

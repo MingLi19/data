@@ -1,9 +1,17 @@
+from enum import Enum
+
 from sqlmodel import SQLModel
 
 
+class EquipmentType(str, Enum):
+    me = "me"
+    dg = "dg"
+    blr = "blr"
+
+
 class EquipmentBase(SQLModel):
-    name: str | None
-    type: str | None
+    name: str
+    type: EquipmentType
 
 
 class EquipmentCreate(EquipmentBase):
@@ -14,8 +22,8 @@ class EquipmentCreate(EquipmentBase):
             "examples": [
                 {
                     "name": "发动机",
-                    "type": "柴油机",
-                }
+                    "type": "me",
+                },
             ]
         }
     }
