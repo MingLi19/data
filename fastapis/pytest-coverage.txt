@@ -8,121 +8,8 @@ collected 22 items
 tests/test_company_crud.py .......                                       [ 31%]
 tests/test_meta_r.py ...                                                 [ 45%]
 tests/test_user_crud.py ......                                           [ 72%]
-tests/test_vessel_crud.py .....F                                         [100%]
+tests/test_vessel_crud.py ......                                         [100%]
 
-=================================== FAILURES ===================================
-______________________________ test_delete_vessel ______________________________
-
-client = <starlette.testclient.TestClient object at 0x7f0af3b666d0>
-setup = None
-
-    def test_delete_vessel(client: TestClient, setup):
->       response = client.delete("/vessel/1").json()
-
-tests/test_vessel_crud.py:130: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/testclient.py:688: in delete
-    return super().delete(
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/httpx/_client.py:1264: in delete
-    return self.request(
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/testclient.py:484: in request
-    return super().request(
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/httpx/_client.py:837: in request
-    return self.send(request, auth=auth, follow_redirects=follow_redirects)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/httpx/_client.py:926: in send
-    response = self._send_handling_auth(
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/httpx/_client.py:954: in _send_handling_auth
-    response = self._send_handling_redirects(
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/httpx/_client.py:991: in _send_handling_redirects
-    response = self._send_single_request(request)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/httpx/_client.py:1027: in _send_single_request
-    response = transport.handle_request(request)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/testclient.py:377: in handle_request
-    raise exc
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/testclient.py:374: in handle_request
-    portal.call(self.app, scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/anyio/from_thread.py:290: in call
-    return cast(T_Retval, self.start_task_soon(func, *args).result())
-/opt/hostedtoolcache/Python/3.13.1/x64/lib/python3.13/concurrent/futures/_base.py:456: in result
-    return self.__get_result()
-/opt/hostedtoolcache/Python/3.13.1/x64/lib/python3.13/concurrent/futures/_base.py:401: in __get_result
-    raise self._exception
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/anyio/from_thread.py:221: in _call_func
-    retval = await retval_or_awaitable
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/fastapi/applications.py:1054: in __call__
-    await super().__call__(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/applications.py:113: in __call__
-    await self.middleware_stack(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/middleware/errors.py:187: in __call__
-    raise exc
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/middleware/errors.py:165: in __call__
-    await self.app(scope, receive, _send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/middleware/exceptions.py:62: in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
-    raise exc
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
-    await app(scope, receive, sender)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/routing.py:715: in __call__
-    await self.middleware_stack(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/routing.py:735: in app
-    await route.handle(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/routing.py:288: in handle
-    await self.app(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/routing.py:76: in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
-    raise exc
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
-    await app(scope, receive, sender)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/starlette/routing.py:73: in app
-    response = await f(request)
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/fastapi/routing.py:327: in app
-    content = await serialize_response(
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-    async def serialize_response(
-        *,
-        field: Optional[ModelField] = None,
-        response_content: Any,
-        include: Optional[IncEx] = None,
-        exclude: Optional[IncEx] = None,
-        by_alias: bool = True,
-        exclude_unset: bool = False,
-        exclude_defaults: bool = False,
-        exclude_none: bool = False,
-        is_coroutine: bool = True,
-    ) -> Any:
-        if field:
-            errors = []
-            if not hasattr(field, "serialize"):
-                # pydantic v1
-                response_content = _prepare_response_content(
-                    response_content,
-                    exclude_unset=exclude_unset,
-                    exclude_defaults=exclude_defaults,
-                    exclude_none=exclude_none,
-                )
-            if is_coroutine:
-                value, errors_ = field.validate(response_content, {}, loc=("response",))
-            else:
-                value, errors_ = await run_in_threadpool(
-                    field.validate, response_content, {}, loc=("response",)
-                )
-            if isinstance(errors_, list):
-                errors.extend(errors_)
-            elif errors_:
-                errors.append(errors_)
-            if errors:
->               raise ResponseValidationError(
-                    errors=_normalize_errors(errors), body=response_content
-                )
-E               fastapi.exceptions.ResponseValidationError: 3 validation errors:
-E                 {'type': 'get_attribute_error', 'loc': ('response', 'data', 'company'), 'msg': "Error extracting attribute: DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'company' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)", 'input': Vessel(dead_weight=2.0, time_zone_id=1, new_vessel=True, created_at=datetime.datetime(2025, 1, 11, 12, 38, 0, 333933), hull_clean_date='2024-12-06', id=1, engine_overhaul_date='2024-12-06', name='船名', newly_paint_date='2024-12-06', mmsi='1', propeller_polish_date='2024-12-06', build_date='2024-12-06', company_id=1, gross_tone=1.0, ship_type_id=1), 'ctx': {'error': "DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'company' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}}
-E                 {'type': 'get_attribute_error', 'loc': ('response', 'data', 'ship_type'), 'msg': "Error extracting attribute: DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'ship_type' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)", 'input': Vessel(dead_weight=2.0, time_zone_id=1, new_vessel=True, created_at=datetime.datetime(2025, 1, 11, 12, 38, 0, 333933), hull_clean_date='2024-12-06', id=1, engine_overhaul_date='2024-12-06', name='船名', newly_paint_date='2024-12-06', mmsi='1', propeller_polish_date='2024-12-06', build_date='2024-12-06', company_id=1, gross_tone=1.0, ship_type_id=1), 'ctx': {'error': "DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'ship_type' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}}
-E                 {'type': 'get_attribute_error', 'loc': ('response', 'data', 'time_zone'), 'msg': "Error extracting attribute: DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'time_zone' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)", 'input': Vessel(dead_weight=2.0, time_zone_id=1, new_vessel=True, created_at=datetime.datetime(2025, 1, 11, 12, 38, 0, 333933), hull_clean_date='2024-12-06', id=1, engine_overhaul_date='2024-12-06', name='船名', newly_paint_date='2024-12-06', mmsi='1', propeller_polish_date='2024-12-06', build_date='2024-12-06', company_id=1, gross_tone=1.0, ship_type_id=1), 'ctx': {'error': "DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'time_zone' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}}
-
-../../../../.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/fastapi/routing.py:176: ResponseValidationError
 =============================== warnings summary ===============================
 tests/test_company_crud.py: 5 warnings
 tests/test_user_crud.py: 10 warnings
@@ -135,6 +22,10 @@ tests/test_company_crud.py::test_create_company_duplicate
 tests/test_user_crud.py::test_create_user
 tests/test_user_crud.py::test_update_user
 tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_update_vessel
   /home/runner/.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlmodel/_compat.py:320: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
     cls.__pydantic_validator__.validate_python(
 
@@ -156,15 +47,9 @@ app/router/equipment.py             33     33     0%   1-77
 app/service/company.py              51      4    92%   45-48
 app/service/equipment.py            37     37     0%   1-46
 app/service/user.py                 43      1    98%   35
-app/service/vessel.py               47      4    91%   40-43
 --------------------------------------------------------------
-TOTAL                              610    110    82%
+TOTAL                              621    106    83%
 
-17 files skipped due to complete coverage.
+18 files skipped due to complete coverage.
 
-=========================== short test summary info ============================
-FAILED tests/test_vessel_crud.py::test_delete_vessel - fastapi.exceptions.ResponseValidationError: 3 validation errors:
-  {'type': 'get_attribute_error', 'loc': ('response', 'data', 'company'), 'msg': "Error extracting attribute: DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'company' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)", 'input': Vessel(dead_weight=2.0, time_zone_id=1, new_vessel=True, created_at=datetime.datetime(2025, 1, 11, 12, 38, 0, 333933), hull_clean_date='2024-12-06', id=1, engine_overhaul_date='2024-12-06', name='船名', newly_paint_date='2024-12-06', mmsi='1', propeller_polish_date='2024-12-06', build_date='2024-12-06', company_id=1, gross_tone=1.0, ship_type_id=1), 'ctx': {'error': "DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'company' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}}
-  {'type': 'get_attribute_error', 'loc': ('response', 'data', 'ship_type'), 'msg': "Error extracting attribute: DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'ship_type' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)", 'input': Vessel(dead_weight=2.0, time_zone_id=1, new_vessel=True, created_at=datetime.datetime(2025, 1, 11, 12, 38, 0, 333933), hull_clean_date='2024-12-06', id=1, engine_overhaul_date='2024-12-06', name='船名', newly_paint_date='2024-12-06', mmsi='1', propeller_polish_date='2024-12-06', build_date='2024-12-06', company_id=1, gross_tone=1.0, ship_type_id=1), 'ctx': {'error': "DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'ship_type' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}}
-  {'type': 'get_attribute_error', 'loc': ('response', 'data', 'time_zone'), 'msg': "Error extracting attribute: DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'time_zone' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)", 'input': Vessel(dead_weight=2.0, time_zone_id=1, new_vessel=True, created_at=datetime.datetime(2025, 1, 11, 12, 38, 0, 333933), hull_clean_date='2024-12-06', id=1, engine_overhaul_date='2024-12-06', name='船名', newly_paint_date='2024-12-06', mmsi='1', propeller_polish_date='2024-12-06', build_date='2024-12-06', company_id=1, gross_tone=1.0, ship_type_id=1), 'ctx': {'error': "DetachedInstanceError: Parent instance <Vessel at 0x7f0af3d200f0> is not bound to a Session; lazy load operation of attribute 'time_zone' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}}
-================== 1 failed, 21 passed, 30 warnings in 1.50s ===================
+======================= 22 passed, 34 warnings in 1.00s ========================
