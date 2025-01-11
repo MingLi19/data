@@ -2,7 +2,10 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import Field, Relationship, SQLModel
 
+from app.entity.equipement_fuel import EquipmentFuel
+
 if TYPE_CHECKING:
+    from app.entity.equipment import Equipment
     from app.entity.vessel import Vessel
 
 
@@ -14,6 +17,8 @@ class FuelType(SQLModel, table=True):
     name_en: str
     name_abbr: str
     cf: float
+
+    equipments: list["Equipment"] = Relationship(back_populates="fuel_types", link_model=EquipmentFuel)
 
     model_config = {
         "json_schema_extra": {

@@ -15,7 +15,7 @@ class EquipmentBase(SQLModel):
 
 
 class EquipmentCreate(EquipmentBase):
-    pass
+    fuel_type_ids: list[int] = []
 
     model_config = {
         "json_schema_extra": {

@@ -27,7 +27,7 @@ async def get_vessels(
 @api.post("", summary="创建船舶")
 async def create_vessel(
     vessel: VesselCreate, service: VesselService = Depends(get_vessel_service)
-) -> ResponseModel[Vessel]:
+) -> ResponseModel[VesselPublic]:
     vessel = service.create_vessel(vessel)
     return {"code": 200, "data": vessel, "message": "船舶创建成功"}
 
@@ -49,12 +49,14 @@ async def update_vessel(
     vessel_id: int,
     vessel: VesselUpdate,
     service: VesselService = Depends(get_vessel_service),
-) -> ResponseModel[Vessel]:
+) -> ResponseModel[VesselPublic]:
     vessel = service.update_vessel(vessel_id, vessel)
     return {"code": 200, "data": vessel, "message": "船舶信息更新成功"}
 
 
 @api.delete("/{vessel_id}", summary="删除船舶")
-async def delete_vessel(vessel_id: int, service: VesselService = Depends(get_vessel_service)) -> ResponseModel[Vessel]:
+async def delete_vessel(
+    vessel_id: int, service: VesselService = Depends(get_vessel_service)
+) -> ResponseModel[VesselPublic]:
     vessel = service.delete_vessel(vessel_id)
     return {"code": 200, "data": vessel, "message": "船舶删除成功"}

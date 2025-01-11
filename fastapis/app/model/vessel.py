@@ -1,11 +1,13 @@
-from sqlmodel import Field, SQLModel
+from pydantic import BaseModel
+from sqlmodel import Field
 
 from app.entity.company import Company
+from app.entity.equipment import Equipment
 from app.entity.meta import ShipType, TimeZone
 from app.model.equipment import EquipmentCreate
 
 
-class VesselBase(SQLModel):
+class VesselBase(BaseModel):
     name: str = Field(unique=True, nullable=False)  # 船名，必填且唯一
     mmsi: str = Field(unique=True, nullable=False)  # 海事识别号，必填且唯一
     build_date: str  # 建造日期，格式为 'YYYY-MM-DD'
@@ -45,6 +47,7 @@ class VesselCreate(VesselBase):
                         {
                             "name": "发动机",
                             "type": "me",
+                            "fuel_type_ids": [1, 2],
                         },
                         {
                             "name": "柴油发电机",
@@ -68,7 +71,7 @@ class VesselUpdate(VesselBase):
         "json_schema_extra": {
             "examples": [
                 {
-                    "name": "船名",
+                    "name": "船名-新",
                     "mmsi": "海事识别号",
                     "build_date": "2024-12-06",
                     "gross_tone": 1.0,
@@ -79,8 +82,23 @@ class VesselUpdate(VesselBase):
                     "newly_paint_date": "2024-12-06",
                     "propeller_polish_date": "2024-12-06",
                     "company_id": 1,
-                    "ship_type": 3,
-                    "time_zone": 4,
+                    "ship_type_id": 3,
+                    "time_zone_id": 4,
+                    "equipments": [
+                        {
+                            "name": "发动机",
+                            "type": "me",
+                            "fuel_type_ids": [1, 2],
+                        },
+                        {
+                            "name": "柴油发电机",
+                            "type": "dg",
+                        },
+                        {
+                            "name": "锅炉",
+                            "type": "blr",
+                        },
+                    ],
                 }
             ]
         }
@@ -92,3 +110,5 @@ class VesselPublic(VesselBase):
     company: Company
     ship_type: ShipType
     time_zone: TimeZone
+
+    equipments: list[Equipment]

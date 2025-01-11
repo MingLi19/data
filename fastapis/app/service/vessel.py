@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
+from app.entity.equipement_fuel import EquipmentFuel
 from app.entity.equipment import Equipment
 from app.entity.vessel import Vessel
 from app.model.vessel import VesselCreate, VesselUpdate
@@ -27,13 +28,20 @@ class VesselService:
         return vessel
 
     def create_vessel(self, vesselToCreate: VesselCreate) -> Vessel:
-        print("vesselToCreate: ", vesselToCreate)
+        equipment_name_fuel_type_ids_map = {
+            equipment.name: equipment.fuel_type_ids for equipment in vesselToCreate.equipments
+        }
         vesselToCreate.equipments = [Equipment.model_validate(equipment) for equipment in vesselToCreate.equipments]
         vessel = Vessel.model_validate(vesselToCreate)
-        print("vessel: ", vessel)
         self.session.add(vessel)
         self.session.commit()
         self.session.refresh(vessel)
+        for equipment in vessel.equipments:
+            fuel_type_ids = equipment_name_fuel_type_ids_map.get(equipment.name)
+            for fuel_type_id in fuel_type_ids:
+                equipment_fuel = EquipmentFuel(equipment_id=equipment.id, fuel_type_id=fuel_type_id)
+                self.session.add(equipment_fuel)
+        self.session.commit()
         return vessel
 
     def update_vessel(self, vessel_id: int, vesselUpdate: VesselUpdate) -> Vessel:
