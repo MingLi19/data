@@ -73,10 +73,6 @@ def test_read_vessel_not_found(client: TestClient):
 
 
 def test_create_vessel(client: TestClient, setup):
-    ship_type = client.get("/meta/ship_type").json()["data"][0]
-    time_zone = client.get("/meta/time_zone").json()["data"][0]
-    print(ship_type)
-    print(time_zone)
     response = client.post(
         "/vessel/",
         json={
@@ -93,12 +89,28 @@ def test_create_vessel(client: TestClient, setup):
             "company_id": 1,
             "ship_type_id": 1,
             "time_zone_id": 1,
+            "equipments": [
+                {
+                    "name": "发动机",
+                    "type": "me",
+                    "fuel_type_ids": [1, 2],
+                },
+                {
+                    "name": "柴油发电机",
+                    "type": "dg",
+                },
+                {
+                    "name": "锅炉",
+                    "type": "blr",
+                },
+            ],
         },
     ).json()
     code = response["code"]
-    data = response["data"]
+    vessel = response["data"]
     assert code == 200
-    assert data["name"] == "船名A"
+    assert vessel["name"] == "船名A"
+    assert vessel["equipments"].__len__() == 3
 
 
 def test_update_vessel(client: TestClient, setup):
@@ -118,20 +130,30 @@ def test_update_vessel(client: TestClient, setup):
             "company_id": 1,
             "ship_type_id": 1,
             "time_zone_id": 1,
+            "equipments": [
+                {
+                    "name": "新发动机",
+                    "type": "me",
+                    "fuel_type_ids": [1, 2],
+                },
+            ],
         },
     ).json()
     code = response["code"]
-    data = response["data"]
+    vessel = response["data"]
+    print("vessel: ", vessel)
     assert code == 200
-    assert data["name"] == "船名B"
+    assert vessel["name"] == "船名B"
+    assert vessel["equipments"].__len__() == 1
+    assert vessel["equipments"][0]["name"] == "新发动机"
 
 
 def test_delete_vessel(client: TestClient, setup):
     response = client.delete("/vessel/1").json()
     code = response["code"]
-    data = response["data"]
+    message = response["message"]
     assert code == 200
-    assert data["name"] == "船名"
+    assert message == "船舶删除成功"
 
     not_found_response = client.get("/vessel/1")
     assert not_found_response.status_code == 404
