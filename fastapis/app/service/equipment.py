@@ -1,6 +1,7 @@
 from core.db import get_db_session
+from entity.equipment import Equipment
 from fastapi import Depends, HTTPException
-from model.equipment import Equipment, EquipmentCreate, EquipmentUpdate
+from model.equipment import EquipmentCreate, EquipmentUpdate
 from sqlmodel import Session, select
 
 
@@ -30,12 +31,8 @@ class EquipmentService:
         self.session.refresh(equipment)
         return equipment
 
-    def update_equipment(
-        self, equipment_id: int, equipmentUpdate: EquipmentUpdate
-    ) -> Equipment:
-        equipmentUpdate = EquipmentUpdate.model_validate(equipmentUpdate).model_dump(
-            exclude_unset=True
-        )
+    def update_equipment(self, equipment_id: int, equipmentUpdate: EquipmentUpdate) -> Equipment:
+        equipmentUpdate = EquipmentUpdate.model_validate(equipmentUpdate).model_dump(exclude_unset=True)
         db_equipment = self.get_equipment_by_id(equipment_id)
         db_equipment.sqlmodel_update(equipmentUpdate)
         self.session.commit()

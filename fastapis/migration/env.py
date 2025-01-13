@@ -1,14 +1,16 @@
 from logging.config import fileConfig
 
 from alembic import context
+from alembic.script import ScriptDirectory
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
 from app.entity.company import Company  # noqa: F401
+from app.entity.equipement_fuel import EquipmentFuel  # noqa: F401
+from app.entity.equipment import Equipment  # noqa: F401
 from app.entity.meta import FuelType, ShipType, TimeZone  # noqa: F401
 from app.entity.user import User  # noqa: F401
 from app.entity.vessel import Vessel  # noqa: F401
-from app.model.equipment import Equipment  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -31,6 +33,23 @@ target_metadata = SQLModel.metadata
 # ... etc.
 
 
+def process_revision_directives(context, revision, directives):
+    # extract Migration
+    migration_script = directives[0]
+    # extract current head revision
+    head_revision = ScriptDirectory.from_config(context.config).get_current_head()
+
+    if head_revision is None:
+        # edge case with first migration
+        new_rev_id = 1
+    else:
+        # default branch with incrementation
+        last_rev_id = int(head_revision.lstrip("0"))
+        new_rev_id = last_rev_id + 1
+    # fill zeros up to 4 digits: 1 -> 001
+    migration_script.rev_id = "{0:03}".format(new_rev_id)
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -49,6 +68,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():
@@ -69,7 +89,11 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            process_revision_directives=process_revision_directives,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
@@ -78,4 +102,5 @@ def run_migrations_online() -> None:
 if context.is_offline_mode():
     run_migrations_offline()
 else:
+    run_migrations_online()
     run_migrations_online()

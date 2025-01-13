@@ -1,9 +1,10 @@
-from sqlmodel import Field, SQLModel
+from pydantic import BaseModel
+from sqlmodel import Field
 
 from app.entity.company import Company
 
 
-class UserBase(SQLModel):
+class UserBase(BaseModel):
     name: str = Field(nullable=False)
     username: str = Field(unique=True, nullable=False)
     hashed_password: str = Field(nullable=False)
@@ -56,4 +57,5 @@ class UserUpdate(UserBase):
 
 
 class UserPublic(UserBase):
+    id: int
     company: Company

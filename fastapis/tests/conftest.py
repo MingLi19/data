@@ -1,9 +1,10 @@
 import pytest
-from app.core.db import get_db_session
-from app.main import app
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
+
+from app.core.db import get_db_session
+from app.main import app
 
 
 @pytest.fixture(name="session")
@@ -12,6 +13,7 @@ def session_fixture():
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
+        echo=True,
     )
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:

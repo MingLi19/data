@@ -30,6 +30,8 @@ def test_read_users(client, setup):
 
 def test_read_user(client, setup):
     response = client.get("/user/1").json()
+    print("response: ", response)
+
     code = response["code"]
     data = response["data"]
     assert code == 200

@@ -1,14 +1,12 @@
-<<<<<<< HEAD:fastapis/app/models/meta.py
-from datetime import datetime
-from typing import Optional
-=======
 from typing import TYPE_CHECKING
->>>>>>> origin/main:fastapis/app/entity/meta.py
 
 from sqlmodel import Field, Relationship, SQLModel
 
+from app.entity.equipement_fuel import EquipmentFuel
+
 if TYPE_CHECKING:
-    from app.model.vessel import Vessel
+    from app.entity.equipment import Equipment
+    from app.entity.vessel import Vessel
 
 
 ## Data Modal -> Meta Data -> Fuel Type
@@ -19,6 +17,8 @@ class FuelType(SQLModel, table=True):
     name_en: str
     name_abbr: str
     cf: float
+
+    equipments: list["Equipment"] = Relationship(back_populates="fuel_types", link_model=EquipmentFuel)
 
     model_config = {
         "json_schema_extra": {
@@ -80,30 +80,3 @@ class TimeZone(SQLModel, table=True):
             ]
         }
     }
-<<<<<<< HEAD:fastapis/app/models/meta.py
-
-
-class Equipment(SQLModel, table=True):
-    id: int = Field(primary_key=True)
-    name_cn: str
-    name_en: str
-    explaination: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    vessel_id: Optional[int] = Field(default=None, foreign_key="vessel.id")
-
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "id": 123,
-                    "name_cn": "主机b",
-                    "name_en": "Main Engine",
-                    "explaination": "船舶的主动力设备",
-                    "created_at": "2024-11-26T12:00:00",
-                }
-            ]
-        }
-    }
-=======
->>>>>>> origin/main:fastapis/app/entity/meta.py

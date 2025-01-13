@@ -38,7 +38,7 @@ async def get_user(
     """
     首页，显示用户信息
     """
-    user = service.get_user_with_company(user_id)
+    user = service.get_user_by_id(user_id)
     return {"code": 200, "data": user, "message": "获取用户信息成功"}
 
 
