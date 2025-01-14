@@ -1,15 +1,26 @@
 
 ```mermaid
+---
+title: 实体关系图
+---
+%%{init: {
+  "theme": "default",
+  "themeCSS": [
+    "[id^=entity-Meta] .er.entityBox { fill: lightgreen;} ",
+    "[id^=entity-Master] .er.entityBox { fill: powderblue;} ",
+    "[id^=entity-Biz] .er.entityBox { fill: pink;} "
+    ]
+}}%%
 erDiagram
-    Company ||--o{ User : has
-    Company ||--o{ Vessel : has
-    Vessel ||..|{ Equipment : has
-    Vessel ||--|| VesselType : is
-    Vessel ||--|| TimeZone : is
-    Equipment }|--o{ EquipmentFuel : has
-    FuelType o|--|{ EquipmentFuel : has
-    Vessel ||--|{ PowerSpeedCurve : has
-    Company {
+    Master-Company ||--o{ Master-User : has
+    Master-Company ||--o{ Master-Vessel : has
+    Master-Vessel ||--|{ Master-PowerSpeedCurve : has
+    Master-Vessel ||..|{ Master-Equipment : has
+    Master-Equipment }|--o{ Master-EquipmentFuel : has
+    Meta-FuelType o|--|{ Master-EquipmentFuel : has
+    Master-Vessel ||--|| Meta-VesselType : is
+    Master-Vessel ||--|| Meta-TimeZone : is
+    Master-Company[Company] {
         int id pk
         string name 
         string address
@@ -17,7 +28,7 @@ erDiagram
         string contact_phone
         string contact_email
     }
-    User {
+    Master-User[User] {
         int id pk
         string name
         string username
@@ -28,10 +39,10 @@ erDiagram
         boolean disabled
         int company_id fk
     }
-    Vessel {
+    Master-Vessel[Vessel] {
         int id pk
-        string name
-        string mmsi
+        string name uk
+        string mmsi uk
         string build_date
         string gross_tone
         string dead_weight
@@ -44,15 +55,37 @@ erDiagram
         int ship_type_id fk
         int time_zone_id fk
     }
-    Equipment {
+    Master-Equipment[Equipment] {
         int id pk
         string name
         string type
         int vessel_id fk
     }
-    EquipmentFuel {
+    Master-EquipmentFuel[EquipmentFuel] {
         int equipment_id pk
         int fuel_type_id pk
     }
+    Meta-FuelType[FuelType] {
+        int id pk
+        string name
+    }
+    Meta-VesselType[VesselType] {
+        int id pk
+        string name
+    }
+    Meta-TimeZone[TimeZone] {
+        int id pk
+        string name
+    }
+    Master-PowerSpeedCurve[PowerSpeedCurve] {
+        int id pk
+        float speed_water
+        float me_power
+        int vessel_id fk
+    }
+```
+
+```mermaid
+flowchart LR
     
 ```
