@@ -14,3 +14,46 @@
 - 403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。
 - 404 Not Found - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。
 - 500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。
+
+## 返回结构体
+
+### 200 OK
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": []
+}
+```
+
+### 201 CREATED
+
+```json
+{
+  "code": 201,
+  "message": "created",
+  "data": {}
+}
+```
+
+### 400 BAD REQUEST
+
+```json
+{
+  "code": 400,
+  "message": "bad request",
+  "data": {}
+}
+```
+
+## API Group
+
+- Meta Data
+    - /meta
+- Master Data
+    - /company
+    - /user
+    - /vessel
+- Business Data
+    - /upload

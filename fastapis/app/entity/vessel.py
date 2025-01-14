@@ -22,9 +22,6 @@ class Vessel(SQLModel, table=True):
     engine_overhaul_date: str | None  # 发动机检修日期
     newly_paint_date: str | None  # 新涂装日期
     propeller_polish_date: str | None  # 螺旋桨抛光日期
-    company_id: int  # 公司ID
-    ship_type_id: int  # 船舶类型
-    time_zone_id: int  # 时区
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
