@@ -104,6 +104,16 @@ def test_create_vessel(client: TestClient, setup):
                     "type": "blr",
                 },
             ],
+            "power_speed_curve": [
+                {
+                    "power": 1000,
+                    "speed": 10,
+                },
+                {
+                    "power": 2000,
+                    "speed": 20,
+                },
+            ],
         },
     ).json()
     code = response["code"]

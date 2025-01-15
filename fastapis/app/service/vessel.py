@@ -1,8 +1,9 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from sqlalchemy import delete
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
+from app.core.error import NotFoundException
 from app.entity.equipement_fuel import EquipmentFuel
 from app.entity.equipment import Equipment
 from app.entity.vessel import Vessel
@@ -25,7 +26,7 @@ class VesselService:
     def get_vessel_by_id(self, vessel_id: int) -> Vessel:
         vessel = self.session.get(Vessel, vessel_id)
         if not vessel:
-            raise HTTPException(status_code=404, detail="船舶不存在")
+            raise NotFoundException(detail="船舶不存在")
         return vessel
 
     def create_vessel(self, vesselToCreate: VesselCreate) -> Vessel:

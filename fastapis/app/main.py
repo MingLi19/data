@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
-from app.router import company, meta, user, vessel
+from app.router import company, meta, upload, user, vessel
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
@@ -69,3 +69,4 @@ app.include_router(meta.api, prefix="/meta", tags=["元数据"])
 app.include_router(company.api, prefix="/company", tags=["公司"])
 app.include_router(user.api, prefix="/user", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
+app.include_router(upload.api, prefix="/upload", tags=["上传"])
