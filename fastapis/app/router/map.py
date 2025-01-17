@@ -14,7 +14,7 @@ EXCEL_FILE_PATH = "scripts/副本八打雁202307.xlsx"
 
 @api.get("/", response_class=HTMLResponse)
 async def get_map(target_date: date):
-    # 从 Excel 文件读取位置数据
+    # 从 Excel 文件读取位置(纬度、经度）数据
     locations = read_locations_from_excel(EXCEL_FILE_PATH)
 
     # 调用服务层生成地图
