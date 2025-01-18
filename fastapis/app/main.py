@@ -9,11 +9,13 @@ from fastapi.responses import JSONResponse
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
 from app.router import company, meta, upload, user, vessel
+from app.services.cors import setup_cors
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
 logger = logging.getLogger(__name__)
 
+setup_cors(app)
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
