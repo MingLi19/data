@@ -6,15 +6,10 @@ settings = Settings()
 
 DATABASE_URL = settings.mongo_dsn.unicode_string()
 
-if DATABASE_URL is not None:
-    mongodb_client = MongoClient(DATABASE_URL)
-else:
-    raise ValueError("Database URL is not provided.")
-
 
 class MongoDBManager:
     def __init__(self):
-        self.client = mongodb_client
+        self.client = MongoClient(DATABASE_URL)
 
     def __enter__(self):
         return self.client
