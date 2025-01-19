@@ -2,15 +2,15 @@ from fastapi import Depends
 from sqlalchemy import delete
 from sqlmodel import Session, select
 
-from app.core.db import get_db_session
 from app.core.error import NotFoundException
+from app.core.mysql import get_mysql_db_session
 from app.entity.equipement_fuel import EquipmentFuel
 from app.entity.equipment import Equipment
 from app.entity.vessel import Vessel
 from app.model.vessel import VesselCreate, VesselUpdate
 
 
-def get_vessel_service(session: Session = Depends(get_db_session)):
+def get_vessel_service(session: Session = Depends(get_mysql_db_session)):
     return VesselService(session)
 
 

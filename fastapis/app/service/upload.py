@@ -3,8 +3,8 @@ import logging
 from fastapi import Depends
 from sqlmodel import Session, select
 
-from app.core.db import get_db_session
 from app.core.error import NotFoundException
+from app.core.mysql import get_mysql_db_session
 from app.entity.vessel import Vessel
 from app.entity.vessel_data_upload import VesselDataUpload
 from app.model.vessel_data_upload import VesselDataUploadCreate
@@ -12,12 +12,12 @@ from app.model.vessel_data_upload import VesselDataUploadCreate
 logger = logging.getLogger(__name__)
 
 
-def get_upload_service(session: Session = Depends(get_db_session)):
+def get_upload_service(session: Session = Depends(get_mysql_db_session)):
     return UploadService(session)
 
 
 class UploadService:
-    def __init__(self, session: Session = Depends(get_db_session)):
+    def __init__(self, session: Session = Depends(get_mysql_db_session)):
         self.session = session
 
     def get_vessel_by_id(self, vessel_id: int) -> Vessel:
