@@ -1,9 +1,10 @@
-from pydantic import MySQLDsn
+from pydantic import MongoDsn, MySQLDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    mysql_dsn: MySQLDsn = "mysql+pymysql://root:123456@localhost:3306/management_system"
+    mysql_dsn: MySQLDsn
+    mongo_dsn: MongoDsn
 
     model_config = SettingsConfigDict(env_file=".env")
 
