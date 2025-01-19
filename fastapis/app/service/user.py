@@ -1,14 +1,14 @@
 from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
-from app.core.db import get_db_session
 from app.core.error import IntegrityException
+from app.core.mysql import get_mysql_db_session
 from app.entity.company import Company
 from app.entity.user import User
 from app.model.user import UserCreate, UserUpdate
 
 
-def get_user_service(session: Session = Depends(get_db_session)):
+def get_user_service(session: Session = Depends(get_mysql_db_session)):
     return UserService(session)
 
 

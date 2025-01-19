@@ -11,6 +11,9 @@ sqlmodel = "^0.0.22"
 pymysql = "^1.1.1"
 cryptography = "^43.0.3"
 pydantic-settings = "^2.7.1"
+pandas = "^2.2.3"
+pymongo = {extras = ["srv"], version = "^4.10.1"}
+asgi-correlation-id = "^4.3.4"
 
 [tool.poetry.group.dev.dependencies]
 alembic = "^1.14.0"
@@ -24,4 +27,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-line-length = 120
+line-length = 120   

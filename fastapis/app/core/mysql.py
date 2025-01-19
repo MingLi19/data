@@ -12,6 +12,17 @@ else:
     raise ValueError("Database URL is not provided.")
 
 
-def get_db_session():
-    with Session(engine) as session:
+class MySQLManger:
+    def __init__(self, engine):
+        self.engine = Session(engine)
+
+    def __enter__(self):
+        return self.engine
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.engine.close()
+
+
+def get_mysql_db_session():
+    with MySQLManger(engine) as session:
         yield session

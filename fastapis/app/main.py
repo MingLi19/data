@@ -1,20 +1,46 @@
 import logging
+from contextlib import asynccontextmanager
 from http import HTTPStatus
 
+from asgi_correlation_id import CorrelationIdFilter, CorrelationIdMiddleware
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.config import Settings
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
 from app.router import company, meta, upload, user, vessel
 
-
-app = FastAPI(docs_url=None, redoc_url=None)
-
+settings = Settings()
 logger = logging.getLogger(__name__)
+
+# Configure logging
+def configure_logging():
+    cid_filter = CorrelationIdFilter(uuid_length=8)
+    console_handler = logging.StreamHandler()
+    console_handler.addFilter(cid_filter.filter)
+    file_handler = logging.FileHandler("app.log")
+    file_handler.addFilter(cid_filter.filter)
+    logging.basicConfig(
+        level=logging.INFO,
+        handlers=[console_handler, file_handler],
+        format="%(levelname)s: \t [%(correlation_id)s] %(asctime)s | %(message)s",
+    )
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    configure_logging()
+
+    yield
+    # Shutdown
+
+app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
+
+app.add_middleware(CorrelationIdMiddleware, header_name="X-ID", transformer=lambda x: x[:8])
 
 # 配置 CORS
 origins = [

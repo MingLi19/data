@@ -69,7 +69,7 @@ def test_read_vessel(client: TestClient, setup):
 def test_read_vessel_not_found(client: TestClient):
     response = client.get("/vessel/2")
     assert response.status_code == 404
-    assert response.json()["detail"] == "船舶不存在"
+    assert response.json()["message"] == "船舶不存在"
 
 
 def test_create_vessel(client: TestClient, setup):
@@ -167,4 +167,4 @@ def test_delete_vessel(client: TestClient, setup):
 
     not_found_response = client.get("/vessel/1")
     assert not_found_response.status_code == 404
-    assert not_found_response.json()["detail"] == "船舶不存在"
+    assert not_found_response.json()["message"] == "船舶不存在"

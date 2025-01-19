@@ -4,15 +4,15 @@ from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
-from app.core.db import get_db_session
 from app.core.error import IntegrityException, NotFoundException, UnknownException
+from app.core.mysql import get_mysql_db_session
 from app.entity.company import Company
 from app.model.company import CompanyCreate, CompanyUpdate
 
 logger = logging.getLogger(__name__)
 
 
-def get_company_service(session: Session = Depends(get_db_session)):
+def get_company_service(session: Session = Depends(get_mysql_db_session)):
     return CompanyService(session)
 
 
