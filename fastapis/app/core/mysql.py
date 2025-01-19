@@ -13,7 +13,11 @@ else:
 
 
 class MySQLManger:
+<<<<<<< HEAD
     def __init__(self):
+=======
+    def __init__(self, engine):
+>>>>>>> origin
         self.engine = Session(engine)
 
     def __enter__(self):

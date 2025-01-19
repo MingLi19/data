@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import Settings
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
-from app.router import company, map, meta, mongo, speed, upload, user, vessel
+from app.router import company, meta, upload, user, vessel
 
 settings = Settings()
 logger = logging.getLogger(__name__)
@@ -100,6 +100,3 @@ app.include_router(company.api, prefix="/company", tags=["公司"])
 app.include_router(user.api, prefix="/user", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
 app.include_router(upload.api, prefix="/upload", tags=["上传"])
-app.include_router(speed.api, prefix="/speed", tags=["图表"])
-app.include_router(map.api, prefix="/map", tags=["地图"])
-app.include_router(mongo.api, prefix="/mongo", tags=["mongo"])
