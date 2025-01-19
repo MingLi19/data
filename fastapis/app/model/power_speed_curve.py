@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlmodel import Field, SQLModel
+from app.entity.power_speed_curve import PowerSpeedCurve
 
 if TYPE_CHECKING:
     pass
@@ -12,7 +13,7 @@ class PowerSpeedCurveBase(SQLModel):
     me_power: float
 
 
-class PowerSpeedCurve(PowerSpeedCurveBase, table=True):
+class PowerSpeedCurve(PowerSpeedCurveBase):
     __tablename__ = "power_speed_curve"
     id: int = Field(primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
