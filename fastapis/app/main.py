@@ -5,9 +5,9 @@ from http import HTTPStatus
 from asgi_correlation_id import CorrelationIdFilter, CorrelationIdMiddleware
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import Settings
 from app.core.error import IntegrityException, NotFoundException
@@ -16,6 +16,7 @@ from app.router import company, meta, upload, user, vessel
 
 settings = Settings()
 logger = logging.getLogger(__name__)
+
 
 # Configure logging
 def configure_logging():
@@ -30,6 +31,7 @@ def configure_logging():
         format="%(levelname)s: \t [%(correlation_id)s] %(asctime)s | %(message)s",
     )
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
@@ -38,14 +40,13 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown
 
+
 app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
 
 app.add_middleware(CorrelationIdMiddleware, header_name="X-ID", transformer=lambda x: x[:8])
 
 # 配置 CORS
-origins = [
-    "http://127.0.0.1:8000"
-]
+origins = ["http://127.0.0.1:8000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,6 +55,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
