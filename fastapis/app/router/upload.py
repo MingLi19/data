@@ -44,6 +44,9 @@ async def upload_orginal_file(
 ) -> ResponseModel:
     """
     首页，点击“上传数据”按钮，上传原始数据
+    第一，将上传的文件保存到服务器
+    第二，将上传的文件路径保存到数据库，生成一条数据上传记录
+    第三，后台任务读取上传的文件，将数据保存到数据库
     """
     vessel = vessel_service.get_vessel_by_id(vessel_id)
     current_date = datetime.date.today()
@@ -60,7 +63,6 @@ async def upload_orginal_file(
 
 @api.get("/test", summary="获取船舶数据")
 async def get_vessel_data(
-    vessel_id: Annotated[int, Path(description="船舶ID")],
     service: DataService = Depends(get_data_service),
 ) -> ResponseModel:
     """
@@ -68,3 +70,15 @@ async def get_vessel_data(
     """
     data = service.get_all_data()
     return {"code": 200, "data": data, "message": "获取成功"}
+
+
+@api.post("/test", summary="插入船舶数据")
+async def insert_vessel_data(
+    service: DataService = Depends(get_data_service),
+) -> ResponseModel:
+    """
+    测试
+    """
+    data = {"name": "test"}
+    service.insert_data(data)
+    return {"code": 200, "data": None, "message": "插入成功"}

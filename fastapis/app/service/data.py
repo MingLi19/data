@@ -10,7 +10,11 @@ def get_data_service(client: MongoClient = Depends(get_mondo_db_client)):
 
 class DataService:
     def __init__(self, client: MongoClient):
-        self.v = client
+        self.client = client
 
     def get_all_data(self):
-        return self.v.list_database_names()
+        return self.client.list_database_names()
+
+    def insert_data(self, data):
+        # db -> collection -> document
+        self.client.db.records.insert_one(data)
