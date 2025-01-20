@@ -1,0 +1,55 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.1, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/runner/work/data/data/fastapis
+configfile: pyproject.toml
+plugins: cov-6.0.0, anyio-4.6.2.post1
+collected 22 items
+
+tests/test_company_crud.py .......                                       [ 31%]
+tests/test_meta_r.py ...                                                 [ 45%]
+tests/test_user_crud.py ......                                           [ 72%]
+tests/test_vessel_crud.py ......                                         [100%]
+
+=============================== warnings summary ===============================
+tests/test_company_crud.py: 5 warnings
+tests/test_user_crud.py: 10 warnings
+tests/test_vessel_crud.py: 10 warnings
+  /home/runner/.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/pydantic/fields.py:568: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return self.default_factory()
+
+tests/test_company_crud.py::test_create_company
+tests/test_company_crud.py::test_create_company_duplicate
+tests/test_user_crud.py::test_create_user
+tests/test_user_crud.py::test_update_user
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_create_vessel
+tests/test_vessel_crud.py::test_update_vessel
+  /home/runner/.cache/pypoetry/virtualenvs/non-package-mode-NjsN46fl-py3.13/lib/python3.13/site-packages/sqlmodel/_compat.py:320: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    cls.__pydantic_validator__.validate_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+----- generated xml file: /home/runner/work/data/data/fastapis/pytest.xml ------
+
+---------- coverage: platform linux, python 3.13.1-final-0 -----------
+Name                             Stmts   Miss  Cover   Missing
+--------------------------------------------------------------
+app/core/db.py                      10      3    70%   12, 16-17
+app/core/error.py                    9      1    89%   13
+app/entity/company.py               16      2    88%   7-8
+app/entity/equipment.py             16      1    94%   11
+app/entity/meta.py                  31      2    94%   8-9
+app/entity/vessel.py                30      1    97%   10
+app/main.py                         30      3    90%   20, 57-58
+app/model/power_speed_curve.py      18     18     0%   1-32
+app/router/equipment.py             33     33     0%   1-77
+app/service/company.py              51      4    92%   45-48
+app/service/equipment.py            37     37     0%   1-46
+app/service/user.py                 43      1    98%   35
+--------------------------------------------------------------
+TOTAL                              621    106    83%
+
+18 files skipped due to complete coverage.
+
+======================= 22 passed, 34 warnings in 1.00s ========================

@@ -1,0 +1,81 @@
+import logging
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Path, status
+
+from app.core.security import verify_token
+from app.entity.company import Company
+from app.model.company import CompanyCreate, CompanyUpdate
+from app.model.response import ResponseModel
+from app.service.company import CompanyService, get_company_service
+
+api = APIRouter()
+
+logger = logging.getLogger(__name__)
+
+
+@api.get("", summary="获取所有公司")
+async def read_companies(
+    service: CompanyService = Depends(get_company_service),
+) -> ResponseModel[list[Company]]:
+    """
+    用来显示公司列表
+    """
+    companies = service.get_all_companies()
+    return {"code": 200, "data": companies, "message": "获取公司列表成功"}
+
+
+@api.get("/{company_id}", summary="获取单个公司详情")
+async def read_company(
+    company_id: Annotated[int, Path(description="公司ID")],
+    service: CompanyService = Depends(get_company_service),
+) -> ResponseModel[Company]:
+    """
+    首页，显示公司信息
+    """
+    company = service.get_company_by_id(company_id)
+    return {"code": 200, "data": company, "message": "获取公司信息成功"}
+
+
+@api.put("/{company_id}", summary="更新公司信息")
+async def update_company(
+    company_id: int,
+    company: CompanyUpdate,
+    service: CompanyService = Depends(get_company_service),
+) -> ResponseModel[Company]:
+    company = service.update_company(company_id, company)
+    return {"code": 200, "data": company, "message": "公司信息更新成功"}
+
+
+@api.delete("/{company_id}", summary="删除公司")
+async def delete_company(
+    company_id: int, service: CompanyService = Depends(get_company_service)
+) -> ResponseModel[Company]:
+    company = service.delete_company(company_id)
+    return {"code": 200, "data": company, "message": "公司删除成功"}
+
+
+@api.post("", summary="创建公司")
+async def create_company(
+    company: CompanyCreate,
+    token: Annotated[str, Header(..., alias="Authorization")],  # 获取 Authorization 头中的 token
+    service: CompanyService = Depends(get_company_service),
+) -> ResponseModel[Company]:
+    # 在这里检查 token 是否传递
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Authorization header is missing",
+        )
+    # 验证 token 并处理权限
+    payload = verify_token(token)  # 验证 token，获取用户的角色信息
+    user_role = payload.get("role")
+    if user_role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="权限不足，必须是管理员才能创建公司",
+        )
+    print(f"Received token: {token}")  # 打印 token 确认是否传递
+    # 创建公司
+    company = service.create_company(company)
+    return {"code": 200, "data": company, "message": "公司创建成功"}
