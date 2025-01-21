@@ -2,7 +2,6 @@ from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.core.db import get_db_session
-from app.core.error import IntegrityException
 from app.entity.power_speed_curve import PowerSpeedCurve
 from app.model.power_speed_curve import PowerSpeedCurveCreate
 
