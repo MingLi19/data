@@ -8,7 +8,7 @@ from app.core.upload import safe_open_w
 from app.entity.vessel_data_upload import VesselDataUpload
 from app.model.response import ResponseModel
 from app.model.vessel_data_upload import VesselDataUploadCreate
-from app.service.data import DataService, get_data_service
+from app.service.data import DataService
 from app.service.upload import UploadService, get_upload_service
 from app.service.vessel import VesselService, get_vessel_service
 
@@ -61,24 +61,32 @@ async def upload_orginal_file(
     return {"code": 200, "data": None, "message": "上传成功"}
 
 
-@api.get("/test", summary="获取船舶数据")
+@api.get("/vessel/{vessel_id}/data", summary="获取船舶数据")
 async def get_vessel_data(
-    service: DataService = Depends(get_data_service),
+    vessel_id: Annotated[int, Path(description="船舶ID")],
+    service: DataService = Depends(get_upload_service),
 ) -> ResponseModel:
     """
-    测试
+    获取指定船舶的数据
     """
-    data = service.get_all_data()
-    return {"code": 200, "data": data, "message": "获取成功"}
+    vessel_data = service.get_vessel_by_id(vessel_id)
+    if not vessel_data:
+        return {"code": 404, "data": None, "message": "未找到数据"}
+    return {"code": 200, "data": vessel_data, "message": "获取成功"}
 
 
-@api.post("/test", summary="插入船舶数据")
+@api.post("/vessel/{vessel_id}/data", summary="插入船舶数据")
 async def insert_vessel_data(
-    service: DataService = Depends(get_data_service),
+    vessel_id: Annotated[int, Path(description="船舶ID")],
+    vessel_data: VesselDataUploadCreate,
+    service: DataService = Depends(get_upload_service),
 ) -> ResponseModel:
     """
-    测试
+    插入船舶数据
     """
-    data = {"name": "test"}
-    service.insert_data(data)
+    file_path = vessel_data.file_path  # 从请求体中获取文件路径
+    date_start = vessel_data.date_start
+    date_end = vessel_data.date_end
+
+    service.insert_data(vessel_id=vessel_id, file_path=file_path, date_start=date_start, date_end=date_end)
     return {"code": 200, "data": None, "message": "插入成功"}
