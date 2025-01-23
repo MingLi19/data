@@ -1,8 +1,9 @@
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Header, HTTPException, Path, status
 
+from app.core.security import verify_token
 from app.entity.company import Company
 from app.model.company import CompanyCreate, CompanyUpdate
 from app.model.response import ResponseModel
@@ -22,14 +23,6 @@ async def read_companies(
     """
     companies = service.get_all_companies()
     return {"code": 200, "data": companies, "message": "获取公司列表成功"}
-
-
-@api.post("", summary="创建公司")
-async def create_company(
-    company: CompanyCreate, service: CompanyService = Depends(get_company_service)
-) -> ResponseModel[Company]:
-    company = service.create_company(company)
-    return {"code": 200, "data": company, "message": "公司创建成功"}
 
 
 @api.get("/{company_id}", summary="获取单个公司详情")
@@ -60,3 +53,29 @@ async def delete_company(
 ) -> ResponseModel[Company]:
     company = service.delete_company(company_id)
     return {"code": 200, "data": company, "message": "公司删除成功"}
+
+
+@api.post("", summary="权限创建公司")
+async def create_company(
+    company: CompanyCreate,
+    token: Annotated[str, Header(..., alias="Authorization")],  # 获取 Authorization 头中的 token
+    service: CompanyService = Depends(get_company_service),
+) -> ResponseModel[Company]:
+    # 在这里检查 token 是否传递
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Authorization header is missing",
+        )
+    # 验证 token 并处理权限
+    payload = verify_token(token)  # 验证 token，获取用户的角色信息
+    user_role = payload.get("role")
+    if user_role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="权限不足，必须是管理员才能创建公司",
+        )
+    print(f"Received token: {token}")  # 打印 token 确认是否传递
+    # 创建公司
+    company = service.create_company(company)
+    return {"code": 200, "data": company, "message": "公司创建成功"}

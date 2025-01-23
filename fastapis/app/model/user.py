@@ -59,3 +59,8 @@ class UserUpdate(UserBase):
 class UserPublic(UserBase):
     id: int
     company: Company
+
+
+class UserLogin(BaseModel):
+    username: str  # 登录用户名
+    password: str  # 明文密码

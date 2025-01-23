@@ -12,6 +12,10 @@ def get_user_service(session: Session = Depends(get_mysql_db_session)):
     return UserService(session)
 
 
+def get_user_by_username(self, username: str) -> User | None:
+    return self.session.query(User).filter(User.username == username).first()
+
+
 class UserService:
     def __init__(self, session: Session):
         self.session = session
@@ -26,6 +30,9 @@ class UserService:
         if not user:
             raise HTTPException(status_code=404, detail="用户不存在")
         return user
+
+    def get_user_by_name(self, username: str) -> User | None:
+        return self.session.query(User).filter(User.username == username).first()
 
     def create_user(self, userToCreate: UserCreate) -> User:
         user = User.model_validate(userToCreate)
