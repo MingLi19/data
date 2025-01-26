@@ -1,32 +1,33 @@
-from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import Optional
+from pydantic import BaseModel
 
-from sqlmodel import Field, SQLModel
-
-if TYPE_CHECKING:
-    pass
-
-
-class PowerSpeedCurveBase(SQLModel):
+class PowerSpeedCurveBase(BaseModel):
+    id: Optional[int] = None
     speed_water: float
     me_power: float
-
-
-class PowerSpeedCurve(PowerSpeedCurveBase, table=True):
-    __tablename__ = "power_speed_curve"
-    id: int = Field(primary_key=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    vessel_id: int = Field(foreign_key="vessel.id")
-
-    model_config = {
-        "json_schema_extra": {"examples": [{"id": 1, "speed_water": 10.0, "me_power": 1000.0, "vessel_id": 1}]}
-    }
-
+    vessel_id: int
 
 class PowerSpeedCurveCreate(PowerSpeedCurveBase):
-    pass
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{
+                "speed_water": 10.0,
+                "me_power": 1000.0,
+                "vessel_id": 1
+            }]
+        }
+    }
 
+class PowerSpeedCurveUpdate(PowerSpeedCurveBase):
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{
+                "speed_water": 12.0,
+                "me_power": 1200.0,
+                "vessel_id": 1
+            }]
+        }
+    }
 
 class PowerSpeedCurvePublic(PowerSpeedCurveBase):
-    pass
+    id: int
