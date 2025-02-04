@@ -1,7 +1,6 @@
+from app.core.mongo import get_mondo_db_client
 from fastapi import Depends
 from pymongo import MongoClient
-
-from app.core.mongo import get_mondo_db_client
 
 
 def get_data_service(client: MongoClient = Depends(get_mondo_db_client)):
@@ -18,3 +17,8 @@ class DataService:
     def insert_data(self, data):
         # db -> collection -> document
         self.client.db.records.insert_one(data)
+
+    def get_data_by_id(self, data_id):
+        return self.client.db.records.find()
+    
+    
