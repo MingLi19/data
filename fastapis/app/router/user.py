@@ -75,7 +75,7 @@ async def login_for_access_token(
 ):
     """
     用户登录接口，验证用户名和密码，
-    若验证成功，返回 JWT Token，用于后续接口访问认证。
+    若验证成功，返回 JWT Token,用于后续接口访问认证。
     """
     user = authenticate_user(session, form_data.username, form_data.password)
     if not user:
