@@ -1,4 +1,5 @@
 import logging
+import sqlite3
 from contextlib import asynccontextmanager
 from http import HTTPStatus
 
@@ -13,13 +14,41 @@ from fastapi.responses import JSONResponse
 from app.core.config import Settings
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
-from app.router import company, meta, upload, user, vessel
+from app.router import company, meta, upload, user, vessel, power_speed_curve
 
 app = FastAPI()
 
 
 settings = Settings()
 logger = logging.getLogger(__name__)
+
+
+class DatabaseHandler(logging.Handler):
+    def __init__(self, db_file):
+        super().__init__()
+        self.db_file = db_file
+        # 创建数据库表（如果不存在）
+        conn = sqlite3.connect(self.db_file)
+        conn.execute("""
+        CREATE TABLE IF NOT EXISTS logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            level TEXT,
+            message TEXT
+        )
+        """)
+        conn.commit()
+        conn.close()
+
+    def emit(self, record):
+        conn = sqlite3.connect("self.db_file")
+        conn.execute(
+            """
+        INSERT INTO logs (level,correlation_id,asctime, message) VALUES (?, ?, ?, ?)
+        """,
+            (record.levelname, record.correlation_id, record.asctime, record.getMessage()),
+        )
+        conn.commit()
+        conn.close()
 
 
 # Configure logging
@@ -29,9 +58,17 @@ def configure_logging():
     console_handler.addFilter(cid_filter.filter)
     file_handler = logging.FileHandler("app.log")
     file_handler.addFilter(cid_filter.filter)
+    database_handler = DatabaseHandler("logs.db")
+    database_handler.addFilter(cid_filter.filter)
+
     logging.basicConfig(
         level=logging.INFO,
         handlers=[console_handler, file_handler],
+        format="%(levelname)s: \t [%(correlation_id)s] %(asctime)s | %(message)s",
+    )
+    logging.basicConfig(
+        level=logging.ERROR,
+        handlers=[database_handler],
         format="%(levelname)s: \t [%(correlation_id)s] %(asctime)s | %(message)s",
     )
 
@@ -115,12 +152,11 @@ app = FastAPI()
 
 
 app.include_router(meta.api, prefix="/meta", tags=["元数据"])
+app.include_router(company.api, prefix="/companies", tags=["公司"])
+app.include_router(user.api, prefix="/users", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
 app.include_router(upload.api, prefix="/upload", tags=["上传"])
-
-app.include_router(user.api, prefix="/users", tags=["用户"])
-app.include_router(company.api, prefix="/companies", tags=["公司"])
-
+app.include_router(power_speed_curve.api, prefix="/power-speed-curve", tags=["功率-速度曲线"])
 
 def custom_openapi():
     if app.openapi_schema:
