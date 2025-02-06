@@ -1,8 +1,9 @@
-from core.mysql import get_mysql_db_session
 from entity.equipment import Equipment
 from fastapi import Depends, HTTPException
 from model.equipment import EquipmentCreate, EquipmentUpdate
 from sqlmodel import Session, select
+
+from app.core.mysql import get_mysql_db_session
 
 
 def get_equipment_service(session: Session = Depends(get_mysql_db_session)):

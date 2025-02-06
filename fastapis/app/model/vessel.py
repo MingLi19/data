@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from sqlmodel import Field
 
 from app.entity.company import Company
 from app.entity.equipment import Equipment
@@ -8,8 +7,8 @@ from app.model.equipment import EquipmentCreate
 
 
 class VesselBase(BaseModel):
-    name: str = Field(unique=True, nullable=False)  # 船名，必填且唯一
-    mmsi: str = Field(unique=True, nullable=False)  # 海事识别号，必填且唯一
+    name: str  # 船名，必填且唯一
+    mmsi: str  # 海事识别号，必填且唯一
     build_date: str  # 建造日期，格式为 'YYYY-MM-DD'
     gross_tone: float  # 总吨位
     dead_weight: float  # 装载吨位

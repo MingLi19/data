@@ -1,12 +1,12 @@
 from fastapi import Depends, HTTPException
 from sqlmodel import Session, select
 
-from app.core.db import get_db_session
+from app.core.mysql import get_mysql_db_session
 from app.entity.power_speed_curve import PowerSpeedCurve
 from app.model.power_speed_curve import PowerSpeedCurveCreate
 
 
-def get_power_speed_curve_service(session: Session = Depends(get_db_session)):
+def get_power_speed_curve_service(session: Session = Depends(get_mysql_db_session)):
     return PowerSpeedCurveService(session)
 
 
