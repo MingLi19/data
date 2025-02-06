@@ -32,9 +32,7 @@ async def create_equipment(
     """
     logger.info(f"请求创建设备: {equipment.name}")
     created_equipment = service.create_equipment(equipment)
-    logger.info(
-        f"成功创建设备: ID={created_equipment.id}, 名称={created_equipment.name}"
-    )
+    logger.info(f"成功创建设备: ID={created_equipment.id}, 名称={created_equipment.name}")
     return {"code": 200, "data": created_equipment, "message": "设备创建成功"}
 
 

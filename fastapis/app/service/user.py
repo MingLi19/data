@@ -13,8 +13,13 @@ def get_user_service(session: Session = Depends(get_mysql_db_session)):
 
 
 class UserService:
-    def __init__(self, session: Session):
+    def __init__(self, session: Session):  # 确保这里接收的是SQLModel Session
         self.session = session
+
+    def get_user_by_name(self, username: str) -> User | None:
+        statement = select(User).where(User.username == username)
+        result = self.session.exec(statement)  # 使用SQLModel Session的exec方法
+        return result.first()
 
     def get_all_users(self) -> list[User]:
         statement = select(User)

@@ -8,12 +8,16 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from app.core.config import Settings
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
 from app.router import company, meta, upload, user, vessel, power_speed_curve
+
+app = FastAPI()
+
 
 settings = Settings()
 logger = logging.getLogger(__name__)
@@ -144,9 +148,40 @@ async def validation_exception_handler(request, exc):
     )
 
 
+app = FastAPI()
+
+
 app.include_router(meta.api, prefix="/meta", tags=["元数据"])
-app.include_router(company.api, prefix="/company", tags=["公司"])
-app.include_router(user.api, prefix="/user", tags=["用户"])
+app.include_router(company.api, prefix="/companies", tags=["公司"])
+app.include_router(user.api, prefix="/users", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
 app.include_router(upload.api, prefix="/upload", tags=["上传"])
 app.include_router(power_speed_curve.api, prefix="/power-speed-curve", tags=["功率-速度曲线"])
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = get_openapi(
+        title="API Docs",
+        version="1.0.0",
+        routes=app.routes,
+    )
+
+    openapi_schema["components"]["securitySchemes"] = {
+        "OAuth2PasswordBearer": {
+            "type": "oauth2",
+            "flows": {
+                "password": {
+                    "tokenUrl": "/users/token",
+                    "scopes": {"me": "普通用户权限", "admin": "管理员权限", "system_admin": "系统管理员权限"},
+                }
+            },
+        }
+    }
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
