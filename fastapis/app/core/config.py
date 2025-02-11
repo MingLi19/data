@@ -6,4 +6,4 @@ class Settings(BaseSettings):
     mysql_dsn: MySQLDsn
     mongo_dsn: MongoDsn
 
-    model_config = SettingsConfigDict(env_file="app/core/local.env")
+    model_config = SettingsConfigDict(env_file=".env")

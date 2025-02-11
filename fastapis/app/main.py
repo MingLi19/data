@@ -1,76 +1,23 @@
 import logging
-import sqlite3
 from contextlib import asynccontextmanager
 from http import HTTPStatus
 
-from asgi_correlation_id import CorrelationIdFilter, CorrelationIdMiddleware
+from asgi_correlation_id import CorrelationIdMiddleware
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from app.core.config import Settings
+from app.core.doc import tags_metadata
 from app.core.error import IntegrityException, NotFoundException
+from app.core.log import configure_logging
 from app.model.response import ResponseModel
-from app.router import company, meta, upload, user, vessel, power_speed_curve
-
-app = FastAPI()
-
+from app.router import company, meta, power_speed_curve, upload, user, vessel
 
 settings = Settings()
 logger = logging.getLogger(__name__)
-
-
-class DatabaseHandler(logging.Handler):
-    def __init__(self, db_file):
-        super().__init__()
-        self.db_file = db_file
-        # 创建数据库表（如果不存在）
-        conn = sqlite3.connect(self.db_file)
-        conn.execute("""
-        CREATE TABLE IF NOT EXISTS logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            level TEXT,
-            message TEXT
-        )
-        """)
-        conn.commit()
-        conn.close()
-
-    def emit(self, record):
-        conn = sqlite3.connect("self.db_file")
-        conn.execute(
-            """
-        INSERT INTO logs (level,correlation_id,asctime, message) VALUES (?, ?, ?, ?)
-        """,
-            (record.levelname, record.correlation_id, record.asctime, record.getMessage()),
-        )
-        conn.commit()
-        conn.close()
-
-
-# Configure logging
-def configure_logging():
-    cid_filter = CorrelationIdFilter(uuid_length=8)
-    console_handler = logging.StreamHandler()
-    console_handler.addFilter(cid_filter.filter)
-    file_handler = logging.FileHandler("app.log")
-    file_handler.addFilter(cid_filter.filter)
-    database_handler = DatabaseHandler("logs.db")
-    database_handler.addFilter(cid_filter.filter)
-
-    logging.basicConfig(
-        level=logging.INFO,
-        handlers=[console_handler, file_handler],
-        format="%(levelname)s: \t [%(correlation_id)s] %(asctime)s | %(message)s",
-    )
-    logging.basicConfig(
-        level=logging.ERROR,
-        handlers=[database_handler],
-        format="%(levelname)s: \t [%(correlation_id)s] %(asctime)s | %(message)s",
-    )
 
 
 @asynccontextmanager
@@ -82,7 +29,12 @@ async def lifespan(app: FastAPI):
     # Shutdown
 
 
-app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
+app = FastAPI(
+    docs_url=None,
+    redoc_url=None,
+    lifespan=lifespan,
+    openapi_tags=tags_metadata,
+)
 
 app.add_middleware(CorrelationIdMiddleware, header_name="X-ID", transformer=lambda x: x[:8])
 
@@ -106,6 +58,7 @@ async def custom_swagger_ui_html():
         oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
         swagger_js_url="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js",
         swagger_css_url="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css",
+        swagger_ui_parameters={"defaultModelsExpandDepth": -1},
     )
 
 
@@ -148,40 +101,9 @@ async def validation_exception_handler(request, exc):
     )
 
 
-app = FastAPI()
-
-
 app.include_router(meta.api, prefix="/meta", tags=["元数据"])
 app.include_router(company.api, prefix="/companies", tags=["公司"])
 app.include_router(user.api, prefix="/users", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
 app.include_router(upload.api, prefix="/upload", tags=["上传"])
 app.include_router(power_speed_curve.api, prefix="/power-speed-curve", tags=["功率-速度曲线"])
-
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-
-    openapi_schema = get_openapi(
-        title="API Docs",
-        version="1.0.0",
-        routes=app.routes,
-    )
-
-    openapi_schema["components"]["securitySchemes"] = {
-        "OAuth2PasswordBearer": {
-            "type": "oauth2",
-            "flows": {
-                "password": {
-                    "tokenUrl": "/users/token",
-                    "scopes": {"me": "普通用户权限", "admin": "管理员权限", "system_admin": "系统管理员权限"},
-                }
-            },
-        }
-    }
-
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-
-app.openapi = custom_openapi
