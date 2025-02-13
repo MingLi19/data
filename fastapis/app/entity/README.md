@@ -20,6 +20,8 @@ erDiagram
     Meta-FuelType o|--|{ Master-EquipmentFuel : has
     Master-Vessel ||--|| Meta-VesselType : is
     Master-Vessel ||--|| Meta-TimeZone : is
+    Master-Vessel ||--|{ Biz-StandardData : has
+    Biz-StandardData ||--|{ Biz-DataPerDay : has
     Master-Company[Company] {
         int id pk
         string name 
@@ -81,6 +83,17 @@ erDiagram
         int id pk
         float speed_water
         float me_power
+        int vessel_id fk
+    }
+    Biz-StandardData[StandardData] {
+        string uuid pk
+        string values
+        int vessel_id fk
+    }
+    Biz-DataPerDay[DataPerDay] {
+        int id pk
+        string date
+        string values
         int vessel_id fk
     }
 ```

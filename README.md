@@ -20,7 +20,11 @@
 
 ```mermaid
 graph TD;
-    项目 --> FastAPI & SQLModel & Alembic & Ruff & Pytest;
+    Project --> FastAPI & SQLModel & Pandas & Alembic & Ruff & Pytest;
     FastAPI --> Starlette & Pydantic;
     SQLModel --> SQLAlchemy & Pydantic;
+    SQLAlchemy --> MySQL;
+    Pandas --> PyMongo;
+    PyMongo --> MongoDB;
+    ML --> Scikit-learn & Pandas;
 ```

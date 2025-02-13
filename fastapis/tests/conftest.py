@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-from app.core.mysql import get_mysql_db_session
 from app.main import app
 
 
@@ -25,7 +24,7 @@ def client_fixture(session: Session):
     def get_session_override():
         return session
 
-    app.dependency_overrides[get_mysql_db_session] = get_session_override
+    app.dependency_overrides["get_mysql_db_session"] = get_session_override
 
     client = TestClient(app)
     yield client
