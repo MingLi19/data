@@ -16,8 +16,11 @@ api = APIRouter()
 
 
 def read_csv(file_path: str):
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(file_path)  # 读取csv文件, 生成DataFrame
     print("df", df)
+    # TODO: 生成两套数据，一套是标准化数据 StandardData，一套是日平均标准化数据StandardDataPerDay
+    # StandardData的生成是对原始数据进行标准化处理, 用几个clean function来处理，比如去除异常值，填充缺失值等（data_nulls, data_abnormal, data_filtering） -> 存入MongoDB Collection StandardData
+    # StandardDataPerDay的生成是对StandardData进行按天求平均, groupby('date').mean(), 每天只存一个数据，对历史数据也会进行Overwrite -> 存入MongoDB Collection StandardDataPerDay
 
 
 @api.get("/vessel/{vessel_id}/history", summary="获取船舶数据上传历史")
@@ -57,7 +60,7 @@ async def upload_orginal_file(
         f.write(file.file.read())
     request = VesselDataUploadCreate(file_path=file_path)
     await upload_service.create_vessel_data_upload(vessel_id, request)
-    background_tasks.add_task(read_csv, file_path)
+    background_tasks.add_task(read_csv, file_path)  ## 后台任务读取上传的文件，将数据保存到数据库, 不会阻塞主线程
     return {"code": 200, "data": None, "message": "上传成功"}
 
 
