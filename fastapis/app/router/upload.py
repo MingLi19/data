@@ -1,6 +1,7 @@
 import datetime
 from typing import Annotated
 
+import numpy as np
 import pandas as pd
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Path, Query, UploadFile
 
@@ -18,8 +19,35 @@ api = APIRouter()
 def read_csv(file_path: str):
     df = pd.read_csv(file_path)  # 读取csv文件, 生成DataFrame
     print("df", df)
+    df_nulls = data_nulls(df)
+    df_cleaned = data_abnormal(df_nulls)
+    print(df_cleaned)
+    data_list = df_cleaned.to_dict(orient="records")
+    DataService.insert_standard_data(data_list)
+
     # TODO: 生成两套数据，一套是标准化数据 StandardData，一套是日平均标准化数据StandardDataPerDay
     # StandardData的生成是对原始数据进行标准化处理, 用几个clean function来处理，比如去除异常值，填充缺失值等（data_nulls, data_abnormal, data_filtering） -> 存入MongoDB Collection StandardData
+
+
+def data_nulls(df):
+    for column in df.columns:
+        if df[column].dtype in ["int64", "float64"]:
+            df[column] = df[column].fillna(df[column].mean())
+        else:
+            df[column] = df[column].fillna(method="ffill")  # 使用前一个非缺失值填充
+    return df
+
+
+def data_abnormal(df):
+    for column in df.columns:
+        if df[column].dtype in ["int64", "float64"]:
+            z_scores = np.abs((df[column] - df[column].mean()) / df[column].std())
+            # 标记异常值
+            outliers = z_scores > 3
+            # 去除异常值
+            df_cleaned = df[~outliers]
+    return df_cleaned
+
     # StandardDataPerDay的生成是对StandardData进行按天求平均, groupby('date').mean(), 每天只存一个数据，对历史数据也会进行Overwrite -> 存入MongoDB Collection StandardDataPerDay
 
 
