@@ -20,11 +20,32 @@
 
 ```mermaid
 graph TD;
-    Project --> FastAPI & SQLModel & Pandas & Alembic & Ruff & Pytest;
-    FastAPI --> Starlette & Pydantic;
-    SQLModel --> SQLAlchemy & Pydantic;
-    SQLAlchemy --> MySQL;
-    Pandas --> PyMongo;
-    PyMongo --> MongoDB;
-    ML --> Scikit-learn & Pandas;
+    subgraph Domain-BE
+        direction TB
+        FastAPI --> Starlette & Pydantic;
+        SQLModel --> SQLAlchemy & Pydantic;
+        SQLAlchemy --> MySQL;
+    end
+    subgraph Domain-Data
+        Pandas --> PyMongo;
+        PyMongo --> MongoDB;
+    end
+    subgraph Domain-ML
+        Train --> Pandas*[Pandas] & Scikit-learn & XGBoost;
+        Predict --> MLflow & Domain-BE;
+    end
+    subgraph Domain-FE
+        React
+        Nextjs
+        Shadcn
+    end
+    classDef red fill:#FAD2CF
+    classDef green fill:#CEEAD6
+    classDef blue fill:#D2E3FC
+    classDef yellow fill:#FEEFC3
+    classDef grey fill:#F1F3F4
+    class Domain-BE blue
+    class Domain-Data green
+    class Domain-FE yellow
+    class Domain-ML grey
 ```
