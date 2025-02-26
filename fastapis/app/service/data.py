@@ -25,3 +25,10 @@ class DataService:
     def insert_standard_data(self, data):
         # db -> collection -> StandardData
         self.client.db.StandardData.insert_many(data)
+
+    def get_standard_data(self):
+        return self.client.db.StandardData.find()
+
+    def insert_standard_data_per_day(self, data):
+        # db -> collection -> StandardDataPerDay
+        self.client.db.StandardDataPerDay.insert_many(data)

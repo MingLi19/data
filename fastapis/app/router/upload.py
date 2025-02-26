@@ -24,6 +24,9 @@ def read_csv(file_path: str):
     print(df_cleaned)
     data_list = df_cleaned.to_dict(orient="records")
     DataService.insert_standard_data(data_list)
+    df_mean = DataService.get_standard_data().to_dict(orient="records")
+    df_mean = data_mean(df_mean)
+    DataService.insert_standard_data_per_day(df_mean)
 
     # TODO: 生成两套数据，一套是标准化数据 StandardData，一套是日平均标准化数据StandardDataPerDay
     # StandardData的生成是对原始数据进行标准化处理, 用几个clean function来处理，比如去除异常值，填充缺失值等（data_nulls, data_abnormal, data_filtering） -> 存入MongoDB Collection StandardData
@@ -49,6 +52,11 @@ def data_abnormal(df):
     return df_cleaned
 
     # StandardDataPerDay的生成是对StandardData进行按天求平均, groupby('date').mean(), 每天只存一个数据，对历史数据也会进行Overwrite -> 存入MongoDB Collection StandardDataPerDay
+
+
+def data_mean(df):
+    df = df.groupby("date").mean()
+    return df
 
 
 @api.get("/vessel/{vessel_id}/history", summary="获取船舶数据上传历史")
