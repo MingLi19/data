@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import Settings
 from app.core.error import IntegrityException, NotFoundException
 from app.model.response import ResponseModel
-from app.router import company, meta, upload, user, vessel, power_speed_curve
+from app.router import company, meta, upload, user, vessel, power_speed_curve,attribute_mapping
 
 app = FastAPI()
 
@@ -157,6 +157,8 @@ app.include_router(user.api, prefix="/users", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
 app.include_router(upload.api, prefix="/upload", tags=["上传"])
 app.include_router(power_speed_curve.api, prefix="/power-speed-curve", tags=["功率-速度曲线"])
+#app.include_router(attribute_mapping.router, prefix="/attributes", tags=["属性"])
+
 
 def custom_openapi():
     if app.openapi_schema:

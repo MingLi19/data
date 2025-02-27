@@ -71,3 +71,24 @@ class VesselService:
         self.session.delete(vessel)
         self.session.commit()
         return vessel
+
+    def get_vessel_attributes(self, vessel_id: int) -> list[AttributeMapping]:
+        vessel = self.get_vessel_by_id(vessel_id)
+        attributes = [
+            AttributeMapping(attribute="speed_ground", description="对地航速"),
+            AttributeMapping(attribute="speed_water", description="对水航速"),
+            AttributeMapping(attribute="draft", description="船艏船尾平均吃水"),
+            AttributeMapping(attribute="trim", description="船舶纵倾"),
+            AttributeMapping(attribute="me_rpm", description="主机转速"),
+            AttributeMapping(attribute="wind_speed", description="风速"),
+            AttributeMapping(attribute="wind_direction", description="风向"),
+            AttributeMapping(attribute="slip_ratio", description="滑失比"),
+            AttributeMapping(
+                attribute="me_fuel_consumption_nmile", description="主机每海里油耗（Kg/NM）"
+            ),
+            AttributeMapping(
+                attribute="me_fuel_consumption_power", description="主机油耗（g/kWh）"
+            ),
+            AttributeMapping(attribute="me_shaft_power", description="主机功率"),
+        ]
+        return attributes

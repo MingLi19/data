@@ -58,3 +58,6 @@ async def update_vessel(
 async def delete_vessel(vessel_id: int, service: VesselService = Depends(get_vessel_service)) -> ResponseModel[None]:
     service.delete_vessel(vessel_id)
     return {"code": 200, "data": None, "message": "船舶删除成功"}
+
+@api.get("/{vessel_id}", summary = "获取船舶属性")
+async def  get_attributes():
