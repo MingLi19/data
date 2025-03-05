@@ -2,6 +2,7 @@ import datetime
 import logging
 from datetime import date
 
+import pandas as pd
 from fastapi import Depends
 from sqlmodel import Session, select
 
@@ -10,6 +11,10 @@ from app.core.mysql import get_mysql_db_session
 from app.entity.vessel import Vessel
 from app.entity.vessel_data_upload import VesselDataUpload
 from app.model.vessel_data_upload import VesselDataUploadCreate
+
+from fastapis.app.entity.vessel_data_per_day import VesselDataPerDay
+from fastapis.app.entity.vessel_standard_data import VesselStandardData
+from fastapis.app.model.vessel_standard_data import VesselStandardDataBase
 
 logger = logging.getLogger(__name__)
 
@@ -66,3 +71,35 @@ class UploadService:
         self.session.add(vessel_data_upload)
         self.session.commit()
         return vessel_data_upload
+
+    def clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
+        """数据清洗"""
+        df = df.dropna()  # 去除缺失值
+        df = df[df["value"] > 0]  # 去除异常值（示例）
+        return df
+
+    async def insert_standard_data(self, vessel_id: int, standard_data_base: list[VesselStandardDataBase]) -> None:
+        for standart_data_row in standard_data_base:
+            standart_data = VesselStandardData(
+                vessel_id=vessel_id, **standart_data_row.model_dump())
+            self.session.add(standart_data)
+        self.session.commit()
+
+    async def insert_data_per_day(self, vessel_id: int, standard_data_base: list[VesselStandardDataBase]) -> None:
+        """
+        pandas groupby date
+        """
+        df = pd.DataFrame([VesselDataPerDay(**d.model_dump()).model_dump()
+                          for d in standard_data_base])
+        df = df.groupby('date').agg('mean').reset_index()
+        data = df.to_dict(orient='records')
+        for d in data:
+            data_per_day = VesselDataPerDay(
+                vessel_id=vessel_id, **d)
+            old_data_per_day = self.session.get(
+                VesselDataPerDay, (data_per_day.date, vessel_id))
+            if old_data_per_day:
+                self.session.delete(old_data_per_day)
+                self.session.commit()
+            self.session.add(data_per_day)
+            self.session.commit()
