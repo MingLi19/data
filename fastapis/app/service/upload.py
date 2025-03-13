@@ -2,7 +2,6 @@ import datetime
 import logging
 from datetime import date
 
-import pandas as pd
 from fastapi import Depends
 from sqlmodel import Session, select
 

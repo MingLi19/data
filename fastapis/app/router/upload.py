@@ -1,7 +1,7 @@
 import codecs
 import csv
 import datetime
-from typing import Annotated, Any
+from typing import Annotated
 
 import pandas as pd
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Path, Query, UploadFile
