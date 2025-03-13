@@ -14,7 +14,7 @@ from app.core.doc import tags_metadata
 from app.core.error import IntegrityException, NotFoundException
 from app.core.log import configure_logging
 from app.model.response import ResponseModel
-from app.router import company, meta, power_speed_curve, upload, user, vessel
+from app.router import company, image_to_word, meta, power_speed_curve, upload, user, vessel
 
 settings = Settings()
 logger = logging.getLogger(__name__)
@@ -107,3 +107,4 @@ app.include_router(user.api, prefix="/users", tags=["用户"])
 app.include_router(vessel.api, prefix="/vessel", tags=["船舶"])
 app.include_router(upload.api, prefix="/upload", tags=["上传"])
 app.include_router(power_speed_curve.api, prefix="/power-speed-curve", tags=["功率-速度曲线"])
+app.include_router(image_to_word.api, prefix="/image", tags=["图片转Word"])
