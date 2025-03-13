@@ -13,8 +13,7 @@ from app.model.vessel_data_upload import VesselDataUploadCreate
 from app.service.data import DataService
 from app.service.upload import UploadService, get_upload_service
 from app.service.vessel import VesselService, get_vessel_service
-from pandas import DataFrame
-from pandas.io.parsers import TextFileReader
+from app.service.dataupload import dataUploadService, get_dataUpload_service
 
 from fastapis.app.model.vessel_standard_data import VesselStandardDataBase
 
@@ -104,11 +103,11 @@ def read_csv(file_path: str):
 async def upload_standard_csv(
         vessel_id: Annotated[int, Path(description="船舶ID")],
         file: Annotated[UploadFile, File(description="csv标准文件")],
-        service: UploadService = Depends(get_upload_service)
+        service: dataUploadService = Depends(get_dataUpload_service)
 ) -> ResponseModel:
-    csvReader = csv.DictReader(codecs.iterdecode(file.file, 'utf-8'))
+    csv_reader  = csv.DictReader(codecs.iterdecode(file.file, 'utf-8'))
     data: list[VesselStandardDataBase] = []
-    for row in csvReader:
+    for row in csv_reader :
         standardData = VesselStandardDataBase(**row)
         data.append(standardData)
     data = service.clean_data(data)
