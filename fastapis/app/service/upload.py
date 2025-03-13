@@ -11,6 +11,7 @@ from app.entity.vessel import Vessel
 from app.entity.vessel_data_upload import VesselDataUpload
 from app.model.vessel_data_upload import VesselDataUploadCreate
 
+
 logger = logging.getLogger(__name__)
 
 

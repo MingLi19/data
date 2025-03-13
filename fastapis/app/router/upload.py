@@ -1,3 +1,5 @@
+import codecs
+import csv
 import datetime
 from typing import Annotated
 
@@ -11,16 +13,11 @@ from app.model.vessel_data_upload import VesselDataUploadCreate
 from app.service.data import DataService
 from app.service.upload import UploadService, get_upload_service
 from app.service.vessel import VesselService, get_vessel_service
+from app.service.dataupload import dataUploadService, get_dataUpload_service
+
+from fastapis.app.model.vessel_standard_data import VesselStandardDataBase
 
 api = APIRouter()
-
-
-def read_csv(file_path: str):
-    df = pd.read_csv(file_path)  # 读取csv文件, 生成DataFrame
-    print("df", df)
-    # TODO: 生成两套数据，一套是标准化数据 StandardData，一套是日平均标准化数据StandardDataPerDay
-    # StandardData的生成是对原始数据进行标准化处理, 用几个clean function来处理，比如去除异常值，填充缺失值等（data_nulls, data_abnormal, data_filtering） -> 存入MongoDB Collection StandardData
-    # StandardDataPerDay的生成是对StandardData进行按天求平均, groupby('date').mean(), 每天只存一个数据，对历史数据也会进行Overwrite -> 存入MongoDB Collection StandardDataPerDay
 
 
 @api.get("/vessel/{vessel_id}/history", summary="获取船舶数据上传历史")
@@ -93,3 +90,27 @@ async def insert_vessel_data(
 
     service.insert_data(vessel_id=vessel_id, file_path=file_path, date_start=date_start, date_end=date_end)
     return {"code": 200, "data": None, "message": "插入成功"}
+def read_csv(file_path: str):
+    df = pd.read_csv(file_path)  # 读取csv文件, 生成DataFrame
+    print("df", df)
+    # TODO: 生成两套数据，一套是标准化数据 StandardData，一套是日平均标准化数据StandardDataPerDay
+    # StandardData的生成是对原始数据进行标准化处理, 用几个clean function来处理，
+    # 比如去除异常值，填充缺失值等（data_nulls, data_abnormal, data_filtering） -> 存入MongoDB Collection StandardData
+    # StandardDataPerDay的生成是对StandardData进行按天求平均, groupby('date').mean(), 每天只存一个数据，
+    # 对历史数据也会进行Overwrite -> 存入MongoDB Collection StandardDataPerDay
+
+@api.post("/vessel/{vessel_id}/standard", summary="上传标准数据")
+async def upload_standard_csv(
+        vessel_id: Annotated[int, Path(description="船舶ID")],
+        file: Annotated[UploadFile, File(description="csv标准文件")],
+        service: dataUploadService = Depends(get_dataUpload_service)
+) -> ResponseModel:
+    csv_reader  = csv.DictReader(codecs.iterdecode(file.file, 'utf-8'))
+    data: list[VesselStandardDataBase] = []
+    for row in csv_reader :
+        standardData = VesselStandardDataBase(**row)
+        data.append(standardData)
+    data = service.clean_data(data)
+    await service.insert_standard_data(vessel_id, data)
+    await service.insert_data_per_day(vessel_id, data)
+    return {"code": 200, "data": None, "message": "上传成功"}
